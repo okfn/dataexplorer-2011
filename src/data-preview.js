@@ -3,7 +3,6 @@
 
   // Set up in DOM ready.
   dp.$dialog = null;
-  dp.webstore = null;
 
   // Time to wait for a JSONP request to timeout.
   dp.timeout = 5000;
@@ -90,105 +89,6 @@
     });
   };
 
-  // Public: Searches a dataset object returned by the CKAN api for a specific
-  // resource using the hash as identification.
-  //
-  // hash    - A hash String to search for.
-  // dataset - A package dataset object.
-  //
-  // Returns the resource object or null if not found.
-  //
-  dp.getResourceFromDataset = function (hash, dataset) {
-    var resources = dataset.resources, i = 0, count = resources.length, charts;
-    for (; i < count; i += 1) {
-      if (resources[i].hash === hash) {
-        return resources[i];
-      }
-    }
-    return null;
-  };
-
-  // Public: Requests a dataset from th CKAN api.
-  //
-  // This method returns a jQuery jqXHR object onto which other additonal
-  // callbacks can be added to handle error requests etc.
-  //
-  // uri      - The uri of the package/dataset on the server.
-  // callback - A Function to call with the dataset on completion.
-  //
-  // Examples
-  //
-  //   var uri = '/api/rest/package/uk-population-estimates-1520-to-1851';
-  //   var request = dp.getResourceDataset(uri, function (dataset) {
-  //     // Do something with the dataset.
-  //   });
-  //
-  //   // Additional callbacks can be added to the returned jqXHR object.
-  //   request.error(onError);
-  //
-  // Returns a jqXHR object for the request.
-  //
-  dp.getResourceDataset = function (uri, callback) {
-    return $.getJSON(uri, function (dataset) {
-      callback && callback(dataset);
-    });
-  };
-
-  // Public: Updates a chart on a package resource using the CKAN API.
-  //
-  // Charts are currently stored on an object on the resource namespaced by
-  // id key. This enables each resource to store multiple charts.
-  //
-  // This method returns the jqXHR object onto which additonal callbacks
-  // can be bound.
-  //
-  // preview  - A preview object containing resource data.
-  // chart    - The current chart object to save.
-  // apiKey   - The current logged in users api key String.
-  // callback - A callback Function to fire when the request succeeds.
-  //
-  // Examples
-  //
-  //   datapreview.editor.bind('save', function (chart) {
-  //     var request = dp.updateResourceChart(preview, chart, 'Some-String');
-  //     request.then(onSuccess, onError);
-  //   });
-  //
-  // Returns a jqXHR object.
-  //
-  dp.updateResourceChart = function (preview, chart, apiKey, callback) {
-    var resource = preview.resource,
-        charts   = preview.charts || {},
-        resourceData = {};
-
-    function success() {
-      callback && callback();
-    }
-
-    if (!resource) {
-      return $.Deferred().done(success).resolve().promise();
-    }
-
-    charts[chart.id] = chart;
-
-    resourceData.id  = resource.id;
-    resourceData.url = resource.url;
-    resourceData[dp.resourceChartKey] = JSON.stringify(charts);
-
-    return $.ajax({
-      url: preview['dataset-uri'],
-      data: JSON.stringify({resources: [resourceData]}),
-      type: 'PUT',
-      dataType: 'json',
-      processData: false,
-      contentType: 'application/json',
-      headers: {
-        'X-CKAN-API-KEY': apiKey
-      },
-      success: success
-    });
-  };
-
   // Public: Loads the plugin UI into the dialog and sets up event listeners.
   //
   // preview - A preview object containing resource data.
@@ -207,37 +107,17 @@
       var viewer   = new dp.createDataPreview(element, columns, data);
       var apiKey   = $.cookie('ckan_apikey');
 
-      // Load chart data from the webstore.
+      // Load chart data from external source
+      // TODO: reinstate
+      // this used to load chart info from related CKAN dataset
       viewer.editor.loading();
-      preview.datasetRequest.success(function () {
-        var charts = preview.charts;
+      viewer.editor.loading(false).disableSave();
 
-        // Load the first chart in the object until the editor supports
-        // loading multiple charts.
-        for (var key in charts) {
-          if (charts.hasOwnProperty(key)) {
-            viewer.editor.load(charts[key]).el.submit();
-            viewer.nav.toggle('chart');
-            viewer.chart.redraw();
-            break;
-          }
-        }
-
-        viewer.editor.loading(false);
-        if (!apiKey) {
-          viewer.editor.disableSave();
-        }
-      }).error(function () {
-        // Could not contact API, disable saving.
-        viewer.editor.loading(false).disableSave();
-      });
-
-      // Save chart data to the webstore.
+      // Save chart data to the client provided callback
+      // TODO: implement
       viewer.editor.bind('save', function (chart) {
         viewer.editor.saving();
-        dp.updateResourceChart(preview, chart, apiKey, function () {
-          viewer.editor.saving(false);
-        });
+        viewer.editor.saving(false);
       });
 
       dialog.bind("dialogresizestop.data-preview", viewer.redraw);
@@ -452,105 +332,8 @@
     }
   };
 
-  // Public: Creates the base UI for the plugin.
-  //
-  // Adds an additonal preview column to the resources table in the CKAN
-  // UI. Also requests the package from the api to see if there is any chart
-  // data stored and updates the preview icons accordingly.
-  //
-  // resources - The resources table wrapped in jQuery.
-  //
-  // Returns nothing.
-  //
-  dp.createPreviewButtons = function(resources) {
-    resources.find('tr:first th:first').before($('<th class="preview">Preview</th>'));
-    // :param resources: resource section div or table.
-    resources.find('tr td:first-child').each(function(idx, element) {
-      var element = $(element);
-      var _format = $.trim(element.next().text());
-
-      var preview = $('<td class="preview"></td>').prependTo(element.parent());
-
-      // do not create previews for some items
-      var _tformat = _format.toLowerCase();
-      if (
-        _tformat.indexOf('zip') != -1
-        ||
-        _tformat.indexOf('tgz') != -1
-        ||
-        _tformat.indexOf('targz') != -1
-        ||
-        _tformat.indexOf('gzip') != -1
-        ||
-        _tformat.indexOf('gz:') != -1
-        ||
-        _tformat.indexOf('word') != -1
-        ||
-        _tformat.indexOf('pdf') != -1
-        ||
-        _tformat === 'other'
-        )
-      {
-        return;
-      }
-
-      // can not preview if hash value doesn't exist
-      var _hash = $.trim(element.siblings().last().text());
-      if (_hash === '') {
-          return;
-      }
-
-      // TODO: add ability to change the limit in this url
-      var _url = dp.webstore + "/" + _hash + "/resource.jsonp?_limit=30";
-
-      // The API enpoint for the current package.
-      var _datasetUri = $('.api code:first a').attr('href');
-
-      // An object that holds information about the currently previewed data.
-      var _preview = {
-        'source': element.find('a').attr('href'),
-        'format': _format,
-        'hash': _hash,
-        'dataset-uri': _datasetUri
-      };
-
-      var _previewSpan = $('<a />', {
-        text: 'Preview',
-        href: _url,
-        click: function(e) {
-          e.preventDefault();
-          dp.loadPreviewDialog(e.target);
-        },
-        'class': 'resource-preview-button'
-      }).data('preview', _preview).appendTo(preview);
-
-      // Request representation from the API.
-      _preview.datasetRequest = dp.getResourceDataset(_datasetUri, function (dataset) {
-        var resource = dp.getResourceFromDataset(_preview.hash, dataset),
-            chartString, charts = {};
-
-        if (resource) {
-          chartString = resource[dp.resourceChartKey];
-          if (chartString) {
-            try {
-              charts = $.parseJSON(chartString);
-
-              // If parsing succeeds add a class to the preview button.
-              _previewSpan.addClass('resource-preview-chart');
-            } catch (e) {}
-          }
-        }
-
-        _preview.dataset = dataset;
-        _preview.resource = resource;
-        _preview.charts = charts;
-      });
-    });
-  };
-
   // Public: Kickstarts the plugin.
   //
-  // webstoreUrl - URL string for the webstore to use.
   // dialogId    - The id of the dialog Element in the page.
   // options     - An object containing aditional options.
   //               timeout: Time in seconds to wait for a JSONP timeout.
@@ -562,12 +345,11 @@
   //
   // Returns nothing.
   //
-  dp.initialize = function(webstoreUrl, dialogId, options) {
+  dp.initialize = function(dialogId, options) {
     dp.$dialog = $('#' + dialogId);
     options = options || {};
 
     dp.timeout = options.timeout || dp.timeout;
-    dp.webstore = webstoreUrl;
 
     var _height = Math.round($(window).height() * 0.6);
 
@@ -600,8 +382,6 @@
       modal: true,
       position: 'fixed'
     };
-
-    dp.createPreviewButtons($('.resources'));
   };
 
   // Export the CKANEXT object onto the window.
