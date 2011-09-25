@@ -1,0 +1,933 @@
+<!DOCTYPE html>  <html> <head>   <title>data-preview.ui.js</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="data-preview.html">                 data-preview.js               </a>                                           <a class="source" href="data-preview.ui.html">                 data-preview.ui.js               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               data-preview.ui.js             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>               <p>This file contains all of the UI elements aside from the containing element
+(ie. lightbox) used to build the datapreview widget. The MainView should
+be initiated with an element containing the elements required by the
+subviews.</p>
+
+<p>Use DATAPREVIEW.createDataPreview() to create new instances of MainView.</p>
+
+<p>Examples</p>
+
+<p>var $element = $(templateString);
+  var datapreview = DATAPREVIEW.createDataPreview($element);</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">$</span><span class="p">,</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
+
+  <span class="kd">var</span> <span class="nx">ui</span> <span class="o">=</span> <span class="p">{};</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <p>Binds methods on an object to always be called with the object as the
+method context.</p>
+
+<p>context    - An object with methods to bind.
+arguments* - Following arguments should be method names to bind.</p>
+
+<p>Examples</p>
+
+<p>var object = {
+    method1: function () {
+      return this;
+    },
+    method2: function () {}
+  };</p>
+
+<p>bindAll(object, 'method1', 'method2');</p>
+
+<p>object.method1.call(window) === object //=> true;</p>
+
+<p>Returns the context argument.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="kd">function</span> <span class="nx">bindAll</span><span class="p">(</span><span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">args</span> <span class="o">=</span> <span class="p">[].</span><span class="nx">slice</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">arguments</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">count</span> <span class="o">=</span> <span class="nx">args</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">count</span><span class="p">;</span> <span class="nx">i</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">context</span><span class="p">[</span><span class="nx">args</span><span class="p">[</span><span class="nx">i</span><span class="p">]]</span> <span class="o">=</span> <span class="nx">$</span><span class="p">.</span><span class="nx">proxy</span><span class="p">(</span><span class="nx">context</span><span class="p">[</span><span class="nx">args</span><span class="p">[</span><span class="nx">i</span><span class="p">]],</span> <span class="nx">context</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">context</span><span class="p">;</span>
+  <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>Creates a new object that inherits from the proto argument.</p>
+
+<p>Source: http://github.com/aron/inheritance.js</p>
+
+<p>This function will use Object.create() if it exists otherwise falls back
+to using a dummy constructor function to create a new object instance.
+Unlike Object.create() this function will always return a new object even
+if a non object is provided as an argument.</p>
+
+<p>proto - An object to use for the new objects internal prototype.</p>
+
+<p>Examples</p>
+
+<p>var appleObject = {color: 'green'}
+  var appleInstance = create(appleObject);</p>
+
+<p>appleInstance.hasOwnProperty('color'); //=> false
+  appleInstance.color === appleObject.color; //=> true</p>
+
+<p>Returns a newly created object.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="kd">function</span> <span class="nx">create</span><span class="p">(</span><span class="nx">proto</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">proto</span> <span class="o">!==</span> <span class="s1">&#39;object&#39;</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="p">{};</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nx">proto</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="kd">function</span> <span class="nx">DummyObject</span><span class="p">()</span> <span class="p">{}</span>
+    <span class="nx">DummyObject</span><span class="p">.</span><span class="nx">prototype</span> <span class="o">=</span> <span class="nx">proto</span><span class="p">;</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nx">DummyObject</span><span class="p">();</span>
+  <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>Public: Creates a new constructor function that inherits from a parent.</p>
+
+<p>Source: http://github.com/aron/inheritance.js</p>
+
+<p>Instance and static methods can also be provided as additional arguments.
+if the methods argument has a property called "constructor" this will be
+used as the constructor function.</p>
+
+<p>Static methods will also be copied over from the parent object. However
+these will not be inheritied prototypally as with the instance methods.</p>
+
+<p>parent     - A constructor Function to inherit from.
+methods    - An Object literal of instance methods that are added to the
+             constructors prototype.
+properties - An Object literal of static/class methods to add to the
+             constructor itself.</p>
+
+<p>Examples</p>
+
+<p>function MyObject() {};</p>
+
+<p>var SubClass = inherit(MyObject, {method: function () {}});
+  var instance = new SubClass();</p>
+
+<p>instance instanceof MyObject //=> true</p>
+
+<p>Returns the new constructor Function.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="kd">function</span> <span class="nx">inherit</span><span class="p">(</span><span class="nx">parent</span><span class="p">,</span> <span class="nx">methods</span><span class="p">,</span> <span class="nx">properties</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">methods</span> <span class="o">=</span> <span class="nx">methods</span> <span class="o">||</span> <span class="p">{};</span>
+
+    <span class="kd">var</span> <span class="nx">Child</span> <span class="o">=</span> <span class="nx">methods</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">&#39;constructor&#39;</span><span class="p">)</span> <span class="o">?</span>
+                <span class="nx">methods</span><span class="p">.</span><span class="nx">constructor</span> <span class="o">:</span> <span class="nx">inherit</span><span class="p">.</span><span class="nx">constructor</span><span class="p">(</span><span class="nx">parent</span><span class="p">);</span>
+
+    <span class="nx">Child</span><span class="p">.</span><span class="nx">prototype</span> <span class="o">=</span> <span class="nx">create</span><span class="p">(</span><span class="nx">parent</span><span class="p">.</span><span class="nx">prototype</span><span class="p">);</span>
+    <span class="nx">Child</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">constructor</span> <span class="o">=</span> <span class="nx">Child</span><span class="p">;</span>
+
+    <span class="k">delete</span> <span class="nx">methods</span><span class="p">.</span><span class="nx">constructor</span><span class="p">;</span>
+    <span class="nx">$</span><span class="p">.</span><span class="nx">extend</span><span class="p">(</span><span class="nx">Child</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="nx">methods</span><span class="p">,</span> <span class="p">{</span><span class="nx">__super__</span><span class="o">:</span> <span class="nx">parent</span><span class="p">.</span><span class="nx">prototype</span><span class="p">});</span>
+
+    <span class="k">return</span> <span class="nx">$</span><span class="p">.</span><span class="nx">extend</span><span class="p">(</span><span class="nx">Child</span><span class="p">,</span> <span class="nx">parent</span><span class="p">,</span> <span class="nx">properties</span><span class="p">);</span>
+  <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p>Public: Base view object that other views should inherit from.</p>
+
+<p>A wrapper around a dom element (itself wrapped in jQuery). Provides useful
+features such as pub/sub methods, and show/hide toggling of the element.</p>
+
+<p>Implements Ben Allman's Tiny PubSub, https://gist.github.com/661855</p>
+
+<p>element - A jQuery wrapper, DOM Element or selector String.</p>
+
+<p>Examples</p>
+
+<p>var myView = new View('my-element');</p>
+
+<p>Returns a new View instance.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">ui</span><span class="p">.</span><span class="nx">View</span> <span class="o">=</span> <span class="nx">inherit</span><span class="p">({},</span> <span class="p">{</span>
+    <span class="nx">constructor</span><span class="o">:</span> <span class="kd">function</span> <span class="nx">View</span><span class="p">(</span><span class="nx">element</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">el</span> <span class="o">=</span> <span class="nx">element</span> <span class="k">instanceof</span> <span class="nx">$</span> <span class="o">?</span> <span class="nx">element</span> <span class="o">:</span> <span class="nx">$</span><span class="p">(</span><span class="nx">element</span><span class="p">);</span></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <p>Use a custom empty jQuery wrapper rather than this.el to prevent
+browser events being triggered.</p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="k">this</span><span class="p">.</span><span class="nx">events</span> <span class="o">=</span> <span class="nx">$</span><span class="p">({});</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <p>Public: Performs a jQuery lookup within the views element.</p>
+
+<p>selector - A selector String to query.</p>
+
+<p>Examples</p>
+
+<p>this.$('.some-child-class');</p>
+
+<p>Returns a jQuery collection.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">$</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">selector</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="nx">selector</span><span class="p">);</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <p>Public: Registers a listener for a topic that will be called when the
+event is triggered. Optionally an Object of topic/callback pairs can
+be passed to the method. Built on top of the jQuery .bind() method
+so other features like namespaces can also be used.</p>
+
+<p>topic - Topic string to subscribe to.
+fn    - Callback function to be called when the topic is triggered.</p>
+
+<p>Examples</p>
+
+<p>view.bind('my-event', onMyEvent);
+  view.bind({
+    'my-event', onMyEvent,
+    'my-other-events': onMyOtherEvent
+  });</p>
+
+<p>Returns itself for chaining.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">bind</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">topic</span><span class="p">,</span> <span class="nx">fn</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">key</span> <span class="k">in</span> <span class="nx">topic</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="nx">topic</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">key</span><span class="p">))</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="nx">topic</span><span class="p">[</span><span class="nx">key</span><span class="p">]);</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+      <span class="p">}</span>
+
+      <span class="kd">function</span> <span class="nx">wrapper</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">fn</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nb">Array</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">slice</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">arguments</span><span class="p">,</span> <span class="mi">1</span><span class="p">));</span>
+      <span class="p">}</span>
+      <span class="nx">wrapper</span><span class="p">.</span><span class="nx">guid</span> <span class="o">=</span> <span class="nx">fn</span><span class="p">.</span><span class="nx">guid</span> <span class="o">=</span> <span class="nx">fn</span><span class="p">.</span><span class="nx">guid</span> <span class="o">||</span> <span class="p">(</span><span class="nx">$</span><span class="p">.</span><span class="nx">guid</span> <span class="o">?</span> <span class="nx">$</span><span class="p">.</span><span class="nx">guid</span><span class="o">++</span> <span class="o">:</span> <span class="nx">$</span><span class="p">.</span><span class="nx">event</span><span class="p">.</span><span class="nx">guid</span><span class="o">++</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="nx">topic</span><span class="p">,</span> <span class="nx">wrapper</span><span class="p">);</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-9">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-9">&#182;</a>               </div>               <p>Public: Unbinds a callback for a topic.</p>
+
+<p>Accepts the same arguments as jQuery's .unbind().</p>
+
+<p>topic - The topic to unbind.
+fn    - A specific function to unbind from the topic.</p>
+
+<p>Examples</p>
+
+<p>view.unbind('my-event');</p>
+
+<p>Returns itself for chaining.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">unbind</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">unbind</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">events</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">);</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-10">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-10">&#182;</a>               </div>               <p>Public: Triggers a topic providing an array of arguments to all listeners.</p>
+
+<p>topic - A topic to publish.
+args  - An Array of arguments to pass into registered listeners.</p>
+
+<p>Examples</p>
+
+<p>view.trigger('my-event', [anArg, anotherArg]);</p>
+
+<p>Returns itself.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">trigger</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">triggerHandler</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">events</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">);</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-11">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-11">&#182;</a>               </div>               <p>Public: Shows the element if hidden.</p>
+
+<p>Returns itself.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">show</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">el</span><span class="p">.</span><span class="nx">show</span><span class="p">();</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">trigger</span><span class="p">(</span><span class="s1">&#39;show&#39;</span><span class="p">);</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-12">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-12">&#182;</a>               </div>               <p>Public: Hides the element if shown.</p>
+
+<p>Returns itself.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">hide</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">el</span><span class="p">.</span><span class="nx">hide</span><span class="p">();</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">trigger</span><span class="p">(</span><span class="s1">&#39;hide&#39;</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-13">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-13">&#182;</a>               </div>               <p>Public: Main view object for the data preview plugin.</p>
+
+<p>Contains the main interface elements and acts as a controller binding
+them together.</p>
+
+<p>element - The main DOM Element used for the plugin.
+columns - The columns array for the data rows formatted for SlickGrid.
+data    - A data object formatted for use in SlickGrid.
+chart   - A chart object to load.</p>
+
+<p>Examples</p>
+
+<p>new MainView($('.datapraview-wrapper'), columns, data);</p>
+
+<p>Returns a new instance of MainView.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">ui</span><span class="p">.</span><span class="nx">MainView</span> <span class="o">=</span> <span class="nx">inherit</span><span class="p">(</span><span class="nx">ui</span><span class="p">.</span><span class="nx">View</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">constructor</span><span class="o">:</span> <span class="kd">function</span> <span class="nx">MainView</span><span class="p">(</span><span class="nx">element</span><span class="p">,</span> <span class="nx">columns</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">chart</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">__super__</span><span class="p">.</span><span class="nx">constructor</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">);</span>
+
+      <span class="nx">bindAll</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="s1">&#39;redraw&#39;</span><span class="p">,</span> <span class="s1">&#39;onNavChange&#39;</span><span class="p">,</span> <span class="s1">&#39;onNavToggleEditor&#39;</span><span class="p">,</span> <span class="s1">&#39;onEditorSubmit&#39;</span><span class="p">);</span>
+
+      <span class="kd">var</span> <span class="nx">view</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">nav</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ui</span><span class="p">.</span><span class="nx">NavigationView</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;.ckanext-datapreview-nav&#39;</span><span class="p">));</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">grid</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ui</span><span class="p">.</span><span class="nx">GridView</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;.ckanext-datapreview-grid&#39;</span><span class="p">),</span> <span class="nx">columns</span><span class="p">,</span> <span class="nx">data</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">chart</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ui</span><span class="p">.</span><span class="nx">ChartView</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;.ckanext-datapreview-graph&#39;</span><span class="p">),</span> <span class="nx">columns</span><span class="p">,</span> <span class="nx">data</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">editor</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ui</span><span class="p">.</span><span class="nx">EditorView</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;.ckanext-datapreview-editor&#39;</span><span class="p">),</span> <span class="nx">columns</span><span class="p">,</span> <span class="nx">chart</span><span class="p">);</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">nav</span><span class="p">.</span><span class="nx">bind</span><span class="p">({</span>
+        <span class="s1">&#39;change&#39;</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">onNavChange</span><span class="p">,</span>
+        <span class="s1">&#39;toggle-editor&#39;</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">onNavToggleEditor</span>
+      <span class="p">});</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">editor</span><span class="p">.</span><span class="nx">bind</span><span class="p">({</span>
+        <span class="s1">&#39;show hide&#39;</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">redraw</span><span class="p">,</span>
+        <span class="s1">&#39;submit&#39;</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">onEditorSubmit</span>
+      <span class="p">});</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;.ckanext-datapreview-editor-info h1&#39;</span><span class="p">).</span><span class="nx">click</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">parent</span><span class="p">().</span><span class="nx">toggleClass</span><span class="p">(</span><span class="s1">&#39;ckanext-datapreview-editor-hide-info&#39;</span><span class="p">);</span>
+      <span class="p">});</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">chart</span><span class="p">.</span><span class="nx">hide</span><span class="p">();</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-14">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-14">&#182;</a>               </div>               <p>Public: Redraws the both the grid and chart views.</p>
+
+<p>Useful if the viewport changes or is resized.</p>
+
+<p>Examples</p>
+
+<p>view.resize();</p>
+
+<p>Returns itself.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">redraw</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">chart</span><span class="p">.</span><span class="nx">redraw</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">grid</span><span class="p">.</span><span class="nx">redraw</span><span class="p">();</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-15">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-15">&#182;</a>               </div>               <p>Public: Toggles the display of the grid and chart views.</p>
+
+<p>Used as a callback function for the NavigationView "change" event.</p>
+
+<p>selected - The name of the newly selected view.</p>
+
+<p>Returns nothing.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">onNavChange</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">selected</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">isGrid</span> <span class="o">=</span> <span class="nx">selected</span> <span class="o">===</span> <span class="s1">&#39;grid&#39;</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">grid</span><span class="p">[</span><span class="nx">isGrid</span> <span class="o">?</span> <span class="s1">&#39;show&#39;</span> <span class="o">:</span> <span class="s1">&#39;hide&#39;</span><span class="p">]();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">chart</span><span class="p">[</span><span class="nx">isGrid</span> <span class="o">?</span> <span class="s1">&#39;hide&#39;</span> <span class="o">:</span> <span class="s1">&#39;show&#39;</span><span class="p">]();</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-16">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-16">&#182;</a>               </div>               <p>Public: Toggles the display of the editor panel.</p>
+
+<p>Used as a callback function for the NavigationView "toggle-editor" event.</p>
+
+<p>showEditor - True if the editor should be visible.</p>
+
+<p>Returns nothing.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">onNavToggleEditor</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">showEditor</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">el</span><span class="p">.</span><span class="nx">toggleClass</span><span class="p">(</span><span class="s1">&#39;ckanext-datapreview-hide-editor&#39;</span><span class="p">,</span> <span class="o">!</span><span class="nx">showEditor</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">redraw</span><span class="p">();</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-17">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-17">&#182;</a>               </div>               <p>Public: Updates the chart view when the editor is submitted.</p>
+
+<p>chart - The chart object to render.</p>
+
+<p>Returns nothing.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">onEditorSubmit</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">chart</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">nav</span><span class="p">.</span><span class="nx">toggle</span><span class="p">(</span><span class="s1">&#39;chart&#39;</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">chart</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="nx">chart</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-18">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-18">&#182;</a>               </div>               <p>Public: Navigation element for switching between views.</p>
+
+<p>Handles the toggling of views within the plugin by firing events when
+buttons are clicked within the view.</p>
+
+<p>element - The Element to use as navigation.</p>
+
+<p>Examples</p>
+
+<p>var nav = new NavigationView($('.ckanext-datapreview-nav'));</p>
+
+<p>// Recieve events when the navigation buttons are clicked.
+  nav.bind('change', onNavigationChangeHandler);</p>
+
+<p>Returns a new instance of NavigationView.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">ui</span><span class="p">.</span><span class="nx">NavigationView</span> <span class="o">=</span> <span class="nx">inherit</span><span class="p">(</span><span class="nx">ui</span><span class="p">.</span><span class="nx">View</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">constructor</span><span class="o">:</span> <span class="kd">function</span> <span class="nx">NavigationView</span><span class="p">(</span><span class="nx">element</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">__super__</span><span class="p">.</span><span class="nx">constructor</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">);</span>
+
+      <span class="nx">bindAll</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="s1">&#39;onEditorToggleChange&#39;</span><span class="p">,</span> <span class="s1">&#39;onPanelToggleChange&#39;</span><span class="p">);</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">panelButtons</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;.ckanext-datapreview-nav-toggle&#39;</span><span class="p">).</span><span class="nx">buttonset</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">panelButtons</span><span class="p">.</span><span class="nx">change</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">onPanelToggleChange</span><span class="p">);</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">editorButton</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#ckanext-datapreview-nav-editor&#39;</span><span class="p">).</span><span class="nx">button</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">editorButton</span><span class="p">.</span><span class="nx">change</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">onEditorToggleChange</span><span class="p">);</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-19">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-19">&#182;</a>               </div>               <p>Public: Toggles a navigation button.</p>
+
+<p>Triggers the "change" event with the panel name provided.</p>
+
+<p>panel - The name of a button to be selected.</p>
+
+<p>Examples</p>
+
+<p>nav.toggle("grid");</p>
+
+<p>Returns itself.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">toggle</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">panel</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-20">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-20">&#182;</a>               </div>               <p>Need to fire all these events just to get jQuery UI to change state.</p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="k">this</span><span class="p">.</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;input[value=&quot;&#39;</span> <span class="o">+</span> <span class="nx">panel</span> <span class="o">+</span> <span class="s1">&#39;&quot;]&#39;</span><span class="p">).</span><span class="nx">click</span><span class="p">().</span><span class="nx">change</span><span class="p">().</span><span class="nx">next</span><span class="p">().</span><span class="nx">click</span><span class="p">();</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-21">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-21">&#182;</a>               </div>               <p>Public: Triggers the "change" event when the navgation changes.</p>
+
+<p>Passes the name of the selected item into all callbacks.</p>
+
+<p>event - An event object.</p>
+
+<p>Returns nothing</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">onPanelToggleChange</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">trigger</span><span class="p">(</span><span class="s1">&#39;change&#39;</span><span class="p">,</span> <span class="p">[</span><span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">value</span><span class="p">]);</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-22">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-22">&#182;</a>               </div>               <p>Public: Triggers the "toggle-editor" event when the editor button is
+clicked. Passes true into callbacks if the button is active.</p>
+
+<p>event - An event object.</p>
+
+<p>Returns nothing</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">onEditorToggleChange</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">trigger</span><span class="p">(</span><span class="s1">&#39;toggle-editor&#39;</span><span class="p">,</span> <span class="p">[</span><span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">checked</span><span class="p">]);</span>
+    <span class="p">}</span>
+  <span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-23">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-23">&#182;</a>               </div>               <p>Public: Creates and manages a SlickGrid instance for displaying the
+resource data in a useful grid.</p>
+
+<p>SlickGrid documentation: http://github.com/mleibman/SlickGrid/wiki</p>
+
+<p>element - The Element to use as a container for the SlickGrid.
+columns - Column options formatted for use in the SlickGrid container.
+data    - Data Object formatted for use in the SlickGrid.
+options - Additional instance and SlickGrid options.</p>
+
+<p>Examples</p>
+
+<p>var grid = new GridView($('.ckanext-datapreview-grid'), columns, data);</p>
+
+<p>Returns a new instance of GridView.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">ui</span><span class="p">.</span><span class="nx">GridView</span> <span class="o">=</span> <span class="nx">inherit</span><span class="p">(</span><span class="nx">ui</span><span class="p">.</span><span class="nx">View</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">constructor</span><span class="o">:</span> <span class="kd">function</span> <span class="nx">GridView</span><span class="p">(</span><span class="nx">element</span><span class="p">,</span> <span class="nx">columns</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">__super__</span><span class="p">.</span><span class="nx">constructor</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">);</span>
+
+      <span class="nx">bindAll</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="s1">&#39;_onSort&#39;</span><span class="p">,</span> <span class="s1">&#39;redraw&#39;</span><span class="p">);</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">dirty</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">columns</span> <span class="o">=</span> <span class="nx">columns</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">data</span> <span class="o">=</span> <span class="nx">data</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">grid</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Slick</span><span class="p">.</span><span class="nx">Grid</span><span class="p">(</span><span class="nx">element</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">columns</span><span class="p">,</span> <span class="nx">$</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span>
+        <span class="nx">enableColumnReorder</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+        <span class="nx">forceFitColumns</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="nx">syncColumnCellResize</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="nx">enableCellRangeSelection</span><span class="o">:</span> <span class="kc">false</span>
+      <span class="p">},</span> <span class="nx">options</span><span class="p">));</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">grid</span><span class="p">.</span><span class="nx">onSort</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_onSort</span><span class="p">;</span></pre></div>             </td>           </tr>                               <tr id="section-24">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-24">&#182;</a>               </div>               <p>In order to extend the resize handles across into the adjacent column
+we need to disable overflow hidden and increase each cells z-index.
+We then wrap the contents in order to reapply the overflow hidden.</p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="k">this</span><span class="p">.</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;.slick-header-column&#39;</span><span class="p">)</span>
+        <span class="p">.</span><span class="nx">wrapInner</span><span class="p">(</span><span class="s1">&#39;&lt;div class=&quot;slick-header-wrapper&quot; /&gt;&#39;</span><span class="p">)</span>
+        <span class="p">.</span><span class="nx">css</span><span class="p">(</span><span class="s1">&#39;overflow&#39;</span><span class="p">,</span> <span class="s1">&#39;visible&#39;</span><span class="p">)</span>
+        <span class="p">.</span><span class="nx">css</span><span class="p">(</span><span class="s1">&#39;z-index&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">index</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="nx">columns</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="nx">index</span><span class="p">;</span>
+        <span class="p">});</span>
+
+      <span class="k">new</span> <span class="nx">Slick</span><span class="p">.</span><span class="nx">Controls</span><span class="p">.</span><span class="nx">ColumnPicker</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">columns</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">grid</span><span class="p">);</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-25">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-25">&#182;</a>               </div>               <p>Public: Reveals the view.</p>
+
+<p>If the dirty property is true then it will redraw the grid.</p>
+
+<p>Examples</p>
+
+<p>grid.show();</p>
+
+<p>Returns itself.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">show</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">__super__</span><span class="p">.</span><span class="nx">show</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">dirty</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">redraw</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">dirty</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-26">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-26">&#182;</a>               </div>               <p>Public: Redraws the grid.</p>
+
+<p>The grid will only be drawn if the element is visible. If hidden the
+dirty property will be set to true and the grid redrawn the next time
+the view is shown.</p>
+
+<p>Examples</p>
+
+<p>grid.redraw();</p>
+
+<p>Returns itself.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">redraw</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">el</span><span class="p">.</span><span class="nx">is</span><span class="p">(</span><span class="s1">&#39;:visible&#39;</span><span class="p">))</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">grid</span><span class="p">.</span><span class="nx">resizeCanvas</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">grid</span><span class="p">.</span><span class="nx">autosizeColumns</span><span class="p">();</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">dirty</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-27">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-27">&#182;</a>               </div>               <p>Public: Sort callback for the SlickGrid grid.</p>
+
+<p>Called when the grids columns are re-ordered. Accepts the selected
+column and the direction and should sort the data property.</p>
+
+<p>column  - The column object being sorted.
+sortAsc - True if the solumn should be sorted by ascending items.</p>
+
+<p>Returns nothing.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">_onSort</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">column</span><span class="p">,</span> <span class="nx">sortAsc</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">sort</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">x</span> <span class="o">=</span> <span class="nx">a</span><span class="p">[</span><span class="nx">column</span><span class="p">.</span><span class="nx">field</span><span class="p">],</span>
+            <span class="nx">y</span> <span class="o">=</span> <span class="nx">b</span><span class="p">[</span><span class="nx">column</span><span class="p">.</span><span class="nx">field</span><span class="p">];</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="nx">x</span> <span class="o">==</span> <span class="nx">y</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="p">(</span><span class="nx">x</span> <span class="o">&gt;</span> <span class="nx">y</span> <span class="o">?</span> <span class="mi">1</span> <span class="o">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="nx">sortAsc</span> <span class="o">?</span> <span class="mi">1</span> <span class="o">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+      <span class="p">});</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">grid</span><span class="p">.</span><span class="nx">invalidate</span><span class="p">();</span>
+    <span class="p">}</span>
+  <span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-28">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-28">&#182;</a>               </div>               <p>Public: Creates a wrapper around a jQuery.Flot() chart.</p>
+
+<p>Currently a very basic implementation that accepts data prepared for the
+SlickGrid, ie columns and data objects and uses them to generate a canvas
+chart.</p>
+
+<p>Flot documentation: http://people.iola.dk/olau/flot/API.txt</p>
+
+<p>element - Element to use as a container for the Flot canvas.
+columns - Array of column data.
+data    - Data Object.
+chart   - Optional chart data to load.</p>
+
+<p>Examples</p>
+
+<p>new ChartView($('.ckanext-datapreview-chart'), columns, data, {
+    id: 'my-chart-id',  // Any unique id for the chart used for storage.
+    type: 'line',       // ID of one of the ChartView.TYPES.
+    groups: 'column-2', // The column to use as the x-axis.
+    series: ['column-3', 'column-4'] // Columns to use as the series.
+  });</p>
+
+<p>Returns a new instance of ChartView.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">ui</span><span class="p">.</span><span class="nx">ChartView</span> <span class="o">=</span> <span class="nx">inherit</span><span class="p">(</span><span class="nx">ui</span><span class="p">.</span><span class="nx">View</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">constructor</span><span class="o">:</span> <span class="kd">function</span> <span class="nx">ChartView</span><span class="p">(</span><span class="nx">element</span><span class="p">,</span> <span class="nx">columns</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">chart</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">__super__</span><span class="p">.</span><span class="nx">constructor</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">data</span> <span class="o">=</span> <span class="nx">data</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">columns</span> <span class="o">=</span> <span class="nx">columns</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">chart</span> <span class="o">=</span> <span class="nx">chart</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">createPlot</span><span class="p">((</span><span class="nx">chart</span> <span class="o">&amp;&amp;</span> <span class="nx">chart</span><span class="p">.</span><span class="nx">type</span><span class="p">)</span> <span class="o">||</span> <span class="s1">&#39;line&#39;</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">draw</span><span class="p">();</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-29">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-29">&#182;</a>               </div>               <p>Public: Creates a new Flot chart and assigns it to the plot property.</p>
+
+<p>typeId - The id String of the grid to create used to load chart
+         specific options on creation.</p>
+
+<p>Examples</p>
+
+<p>chart.createPlot('line');</p>
+
+<p>Returns itself.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">createPlot</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">typeId</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">type</span> <span class="o">=</span> <span class="nx">ui</span><span class="p">.</span><span class="nx">ChartView</span><span class="p">.</span><span class="nx">findTypeById</span><span class="p">(</span><span class="nx">typeId</span><span class="p">),</span>
+          <span class="nx">options</span> <span class="o">=</span> <span class="nx">type</span> <span class="o">&amp;&amp;</span> <span class="nx">type</span><span class="p">.</span><span class="nx">getOptions</span> <span class="o">?</span> <span class="nx">type</span><span class="p">.</span><span class="nx">getOptions</span><span class="p">(</span><span class="k">this</span><span class="p">)</span> <span class="o">:</span> <span class="p">{};</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">plot</span> <span class="o">=</span> <span class="nx">$</span><span class="p">.</span><span class="nx">plot</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">el</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">createSeries</span><span class="p">(),</span> <span class="nx">options</span><span class="p">);</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-30">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-30">&#182;</a>               </div>               <p>Public: Creates the series/data Array required by jQuery.plot()</p>
+
+<p>Examples</p>
+
+<p>$.plot(editor.el, editor.createSeries(), options);</p>
+
+<p>Returns an Array containing points for each series in the chart.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">createSeries</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">series</span> <span class="o">=</span> <span class="p">[],</span> <span class="nx">view</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">chart</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">$</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">chart</span><span class="p">.</span><span class="nx">series</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">seriesIndex</span><span class="p">,</span> <span class="nx">field</span><span class="p">)</span> <span class="p">{</span>
+          <span class="kd">var</span> <span class="nx">points</span> <span class="o">=</span> <span class="p">[];</span>
+          <span class="nx">$</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span><span class="nx">view</span><span class="p">.</span><span class="nx">data</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">index</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">x</span> <span class="o">=</span> <span class="k">this</span><span class="p">[</span><span class="nx">view</span><span class="p">.</span><span class="nx">chart</span><span class="p">.</span><span class="nx">groups</span><span class="p">],</span> <span class="nx">y</span> <span class="o">=</span> <span class="k">this</span><span class="p">[</span><span class="nx">field</span><span class="p">];</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">x</span> <span class="o">===</span> <span class="s1">&#39;string&#39;</span><span class="p">)</span> <span class="p">{</span>
+              <span class="nx">x</span> <span class="o">=</span> <span class="nx">index</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="nx">points</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">]);</span>
+          <span class="p">});</span>
+          <span class="nx">series</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span><span class="nx">data</span><span class="o">:</span> <span class="nx">points</span><span class="p">,</span> <span class="nx">label</span><span class="o">:</span> <span class="nx">view</span><span class="p">.</span><span class="nx">_getColumnName</span><span class="p">(</span><span class="nx">field</span><span class="p">)});</span>
+        <span class="p">});</span>
+      <span class="p">}</span>
+      <span class="k">return</span> <span class="nx">series</span><span class="p">;</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-31">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-31">&#182;</a>               </div>               <p>Public: Redraws the chart with regenerated series data.</p>
+
+<p>Usually .update() will be called instead.</p>
+
+<p>Returns itself.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">draw</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">plot</span><span class="p">.</span><span class="nx">setData</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">createSeries</span><span class="p">());</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">redraw</span><span class="p">();</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-32">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-32">&#182;</a>               </div>               <p>Public: Updates the current plot with a new chart Object.</p>
+
+<p>chart - A chart Object usually provided by the EditorView.</p>
+
+<p>Examples</p>
+
+<p>editor.bind('submit', function (chart) {
+    chart.update(chart);
+  });</p>
+
+<p>Returns itself.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">update</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">chart</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">chart</span> <span class="o">||</span> <span class="nx">chart</span><span class="p">.</span><span class="nx">type</span> <span class="o">!==</span> <span class="k">this</span><span class="p">.</span><span class="nx">chart</span><span class="p">.</span><span class="nx">type</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">createPlot</span><span class="p">(</span><span class="nx">chart</span><span class="p">.</span><span class="nx">type</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">chart</span> <span class="o">=</span> <span class="nx">chart</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">draw</span><span class="p">();</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-33">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-33">&#182;</a>               </div>               <p>Public: Redraws the current chart in the canvas.</p>
+
+<p>Used if the chart data has changed or the viewport has been resized.</p>
+
+<p>Examples</p>
+
+<p>$(window).resize(function () {
+    chart.redraw();
+  });</p>
+
+<p>Returns itself.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">redraw</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">plot</span><span class="p">.</span><span class="nx">resize</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">plot</span><span class="p">.</span><span class="nx">setupGrid</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">plot</span><span class="p">.</span><span class="nx">draw</span><span class="p">();</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-34">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-34">&#182;</a>               </div>               <p>Public: Gets the human readable column name for the field id.</p>
+
+<p>field - A field id String used in the data object.</p>
+
+<p>Examples</p>
+
+<p>chart._getColumnName('column-1');</p>
+
+<p>Returns the String column name.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">_getColumnName</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">field</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">count</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">columns</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">count</span><span class="p">;</span> <span class="nx">i</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">columns</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">field</span> <span class="o">===</span> <span class="nx">field</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">columns</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">name</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+      <span class="k">return</span> <span class="nx">name</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">},</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-35">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-35">&#182;</a>               </div>               <p>Array of chart formatters. They require an id and name attribute and
+and optional getOptions() method. Used to generate different chart types.</p>
+
+<p>id         - A unique id String for the chart type.
+name       - A human readable name for the type.
+getOptions - Function that accepts an instance of ChartView and returns
+             an options object suitable for use in $.plot();</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">TYPES</span><span class="o">:</span> <span class="p">[{</span>
+      <span class="nx">id</span><span class="o">:</span> <span class="s1">&#39;line&#39;</span><span class="p">,</span>
+      <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;Line Chart&#39;</span>
+    <span class="p">},</span> <span class="p">{</span>
+      <span class="nx">id</span><span class="o">:</span> <span class="s1">&#39;bar&#39;</span><span class="p">,</span>
+      <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;Bar Chart (draft)&#39;</span><span class="p">,</span>
+      <span class="nx">getOptions</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">view</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="p">{</span>
+          <span class="nx">series</span><span class="o">:</span> <span class="p">{</span>
+            <span class="nx">lines</span><span class="o">:</span> <span class="p">{</span><span class="nx">show</span><span class="o">:</span> <span class="kc">false</span><span class="p">},</span>
+            <span class="nx">bars</span><span class="o">:</span> <span class="p">{</span>
+              <span class="nx">show</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+              <span class="nx">barWidth</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+              <span class="nx">align</span><span class="o">:</span> <span class="s2">&quot;left&quot;</span><span class="p">,</span>
+              <span class="nx">fill</span><span class="o">:</span> <span class="kc">true</span>
+            <span class="p">}</span>
+          <span class="p">},</span>
+          <span class="nx">xaxis</span><span class="o">:</span> <span class="p">{</span>
+            <span class="nx">tickSize</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="nx">tickLength</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="nx">tickFormatter</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">val</span><span class="p">)</span> <span class="p">{</span>
+              <span class="k">if</span> <span class="p">(</span><span class="nx">view</span><span class="p">.</span><span class="nx">data</span><span class="p">[</span><span class="nx">val</span><span class="p">])</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="nx">view</span><span class="p">.</span><span class="nx">data</span><span class="p">[</span><span class="nx">val</span><span class="p">][</span><span class="nx">view</span><span class="p">.</span><span class="nx">chart</span><span class="p">.</span><span class="nx">groups</span><span class="p">];</span>
+              <span class="p">}</span>
+              <span class="k">return</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+            <span class="p">}</span>
+          <span class="p">}</span>
+        <span class="p">};</span>
+      <span class="p">}</span>
+    <span class="p">}],</span></pre></div>             </td>           </tr>                               <tr id="section-36">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-36">&#182;</a>               </div>               <p>Public: Helper method for findind a chart type by id key.</p>
+
+<p>id - The id key to search for in the ChartView.TYPES Array.</p>
+
+<p>Examples</p>
+
+<p>var type = ChartView.findTypeById('line');</p>
+
+<p>Returns the type object or null if not found.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">findTypeById</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">id</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">filtered</span> <span class="o">=</span> <span class="nx">$</span><span class="p">.</span><span class="nx">grep</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">TYPES</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">type</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">type</span><span class="p">.</span><span class="nx">id</span> <span class="o">===</span> <span class="nx">id</span><span class="p">;</span>
+      <span class="p">});</span>
+      <span class="k">return</span> <span class="nx">filtered</span><span class="p">.</span><span class="nx">length</span> <span class="o">?</span> <span class="nx">filtered</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">:</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-37">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-37">&#182;</a>               </div>               <p>Public: Creates a form for editing chart metadata.</p>
+
+<p>Publishes "submit" and "save" events providing a chart Obejct to all
+registered callbacks.</p>
+
+<p>element - The Element to use as the form wrapper.
+columns - Array of columns that are used by the data set.
+chart   - Optional chart Object to display on load.</p>
+
+<p>Examples</p>
+
+<p>new EditorView($('.ckanext-datapreview-editor'), columns, {
+    id: 'my-chart-id',
+    type: 'line',
+    groups: 'column-2',
+    series: ['column-3', 'column-4']
+  });</p>
+
+<p>Returns a new instance of EditorView.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">ui</span><span class="p">.</span><span class="nx">EditorView</span> <span class="o">=</span> <span class="nx">inherit</span><span class="p">(</span><span class="nx">ui</span><span class="p">.</span><span class="nx">View</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">constructor</span><span class="o">:</span> <span class="kd">function</span> <span class="nx">EditorView</span><span class="p">(</span><span class="nx">element</span><span class="p">,</span> <span class="nx">columns</span><span class="p">,</span> <span class="nx">chart</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">__super__</span><span class="p">.</span><span class="nx">constructor</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">);</span>
+
+      <span class="nx">bindAll</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="s1">&#39;onAdd&#39;</span><span class="p">,</span> <span class="s1">&#39;onRemove&#39;</span><span class="p">,</span> <span class="s1">&#39;onSubmit&#39;</span><span class="p">,</span> <span class="s1">&#39;onSave&#39;</span><span class="p">);</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">columns</span> <span class="o">=</span> <span class="nx">columns</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">type</span>    <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;.ckanext-datapreview-editor-type select&#39;</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">groups</span>  <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;.ckanext-datapreview-editor-group select&#39;</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">series</span>  <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;.ckanext-datapreview-editor-series select&#39;</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">id</span>      <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;.ckanext-datapreview-editor-id&#39;</span><span class="p">);</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;button&#39;</span><span class="p">).</span><span class="nx">button</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">save</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;.ckanext-datapreview-editor-save&#39;</span><span class="p">).</span><span class="nx">click</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">onSave</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">el</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="s1">&#39;submit&#39;</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">onSubmit</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">el</span><span class="p">.</span><span class="nx">delegate</span><span class="p">(</span><span class="s1">&#39;a[href=&quot;#remove&quot;]&#39;</span><span class="p">,</span> <span class="s1">&#39;click&#39;</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">onRemove</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">el</span><span class="p">.</span><span class="nx">delegate</span><span class="p">(</span><span class="s1">&#39;select&#39;</span><span class="p">,</span> <span class="s1">&#39;change&#39;</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">onSubmit</span><span class="p">);</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;.ckanext-datapreview-editor-add&#39;</span><span class="p">).</span><span class="nx">click</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">onAdd</span><span class="p">);</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">setupTypeOptions</span><span class="p">().</span><span class="nx">setupColumnOptions</span><span class="p">();</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">seriesClone</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">series</span><span class="p">.</span><span class="nx">parent</span><span class="p">().</span><span class="nx">clone</span><span class="p">();</span>
+
+      <span class="k">if</span> <span class="p">(</span><span class="nx">chart</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">load</span><span class="p">(</span><span class="nx">chart</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-38">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-38">&#182;</a>               </div>               <p>Public: Fills the "type" select box with options.</p>
+
+<p>Returns itself.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">setupTypeOptions</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">types</span> <span class="o">=</span> <span class="p">{};</span></pre></div>             </td>           </tr>                               <tr id="section-39">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-39">&#182;</a>               </div>               <p>TODO: This shouldn't be referenced directly but passed in as an option.</p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="nx">$</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span><span class="nx">ui</span><span class="p">.</span><span class="nx">ChartView</span><span class="p">.</span><span class="nx">TYPES</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="nx">types</span><span class="p">[</span><span class="k">this</span><span class="p">.</span><span class="nx">id</span><span class="p">]</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span>
+      <span class="p">});</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">type</span><span class="p">.</span><span class="nx">html</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_createOptions</span><span class="p">(</span><span class="nx">types</span><span class="p">));</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-40">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-40">&#182;</a>               </div>               <p>Public: Fills the groups and series select elements with options.</p>
+
+<p>Returns nothing.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">setupColumnOptions</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">options</span> <span class="o">=</span> <span class="p">{},</span> <span class="nx">optionsString</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+      <span class="nx">$</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">columns</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">index</span><span class="p">,</span> <span class="nx">column</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">options</span><span class="p">[</span><span class="nx">column</span><span class="p">.</span><span class="nx">field</span><span class="p">]</span> <span class="o">=</span> <span class="nx">column</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span>
+      <span class="p">});</span>
+      <span class="nx">optionsString</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_createOptions</span><span class="p">(</span><span class="nx">options</span><span class="p">);</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">groups</span><span class="p">.</span><span class="nx">html</span><span class="p">(</span><span class="nx">optionsString</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">series</span><span class="p">.</span><span class="nx">html</span><span class="p">(</span><span class="nx">optionsString</span><span class="p">);</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-41">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-41">&#182;</a>               </div>               <p>Public: Adds a new empty series select box to the editor.</p>
+
+<p>All but the first select box will have a remove button that allows them
+to be removed.</p>
+
+<p>Examples</p>
+
+<p>editor.addSeries();</p>
+
+<p>Returns itself.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">addSeries</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">element</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">seriesClone</span><span class="p">.</span><span class="nx">clone</span><span class="p">(),</span>
+          <span class="nx">label</span>   <span class="o">=</span> <span class="nx">element</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s1">&#39;label&#39;</span><span class="p">),</span>
+          <span class="nx">index</span>   <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">series</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;ul&#39;</span><span class="p">).</span><span class="nx">append</span><span class="p">(</span><span class="nx">element</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">updateSeries</span><span class="p">();</span>
+
+      <span class="nx">label</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="s1">&#39;&lt;a href=&quot;#remove&quot;&gt;Remove&lt;/a&gt;&#39;</span><span class="p">);</span>
+      <span class="nx">label</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s1">&#39;span&#39;</span><span class="p">).</span><span class="nx">text</span><span class="p">(</span><span class="nb">String</span><span class="p">.</span><span class="nx">fromCharCode</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">series</span><span class="p">.</span><span class="nx">length</span> <span class="o">+</span> <span class="mi">64</span><span class="p">));</span>
+
+      <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-42">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-42">&#182;</a>               </div>               <p>Public: Removes a series list item from the editor.</p>
+
+<p>Also updates the labels of the remianing series elements.</p>
+
+<p>element - A jQuery wrapped list item Element to remove.</p>
+
+<p>Examples</p>
+
+<p>// Remove the third series element.
+  editor.removeSeries(editor.series.eq(2).parent());</p>
+
+<p>Returns itself.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">removeSeries</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">element</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">element</span><span class="p">.</span><span class="nx">remove</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">updateSeries</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">series</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">index</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">index</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+          <span class="kd">var</span> <span class="nx">labelSpan</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">prev</span><span class="p">().</span><span class="nx">find</span><span class="p">(</span><span class="s1">&#39;span&#39;</span><span class="p">);</span>
+          <span class="nx">labelSpan</span><span class="p">.</span><span class="nx">text</span><span class="p">(</span><span class="nb">String</span><span class="p">.</span><span class="nx">fromCharCode</span><span class="p">(</span><span class="nx">index</span> <span class="o">+</span> <span class="mi">65</span><span class="p">));</span>
+        <span class="p">}</span>
+      <span class="p">});</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">submit</span><span class="p">();</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-43">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-43">&#182;</a>               </div>               <p>Public: Resets the series property to reference the select elements.</p>
+
+<p>Returns itself.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">updateSeries</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">series</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;.ckanext-datapreview-editor-series select&#39;</span><span class="p">);</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-44">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-44">&#182;</a>               </div>               <p>Public: Loads a chart into the editor.</p>
+
+<p>For an example of the chart object structure see the ChartView docs.</p>
+
+<p>chart - A chart Object to be loaded.</p>
+
+<p>Examples</p>
+
+<p>editor.load(chart);</p>
+
+<p>Returns itself.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">load</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">chart</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">editor</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_selectOption</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">type</span><span class="p">,</span> <span class="nx">chart</span><span class="p">.</span><span class="nx">type</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_selectOption</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">groups</span><span class="p">,</span> <span class="nx">chart</span><span class="p">.</span><span class="nx">groups</span><span class="p">);</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">id</span><span class="p">.</span><span class="nx">val</span><span class="p">(</span><span class="nx">chart</span><span class="p">.</span><span class="nx">id</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">type</span><span class="p">.</span><span class="nx">val</span><span class="p">(</span><span class="nx">chart</span><span class="p">.</span><span class="nx">type</span><span class="p">);</span>
+      <span class="nx">$</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span><span class="nx">chart</span><span class="p">.</span><span class="nx">series</span><span class="p">,</span> <span class="kd">function</span> <span class="nx">update</span><span class="p">(</span><span class="nx">index</span><span class="p">,</span> <span class="nx">option</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">element</span> <span class="o">=</span> <span class="nx">editor</span><span class="p">.</span><span class="nx">series</span><span class="p">.</span><span class="nx">eq</span><span class="p">(</span><span class="nx">index</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">element</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">editor</span><span class="p">.</span><span class="nx">addSeries</span><span class="p">();</span>
+          <span class="k">return</span> <span class="nx">update</span><span class="p">(</span><span class="nx">index</span><span class="p">,</span> <span class="nx">option</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="nx">editor</span><span class="p">.</span><span class="nx">_selectOption</span><span class="p">(</span><span class="nx">element</span><span class="p">,</span> <span class="nx">option</span><span class="p">);</span>
+      <span class="p">});</span>
+
+      <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-45">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-45">&#182;</a>               </div>               <p>Public: Submits the current form.</p>
+
+<p>Triggers the "submit" event providing a chart object to all listeners.</p>
+
+<p>Examples</p>
+
+<p>editor.bind("submit", chart.update);
+  editor.submit();</p>
+
+<p>Returns itself.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">submit</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_triggerChartData</span><span class="p">(</span><span class="s1">&#39;submit&#39;</span><span class="p">);</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-46">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-46">&#182;</a>               </div>               <p>Public: Toggles the loading state on the view.</p>
+
+<p>Freezes all interface elements and displays a loading message.</p>
+
+<p>show - If false disables the loading state.</p>
+
+<p>Examples</p>
+
+<p>// Set the state to loading.
+  editor.loading();</p>
+
+<p>// Disable the loading state.
+  editor.loading(false);</p>
+
+<p>Returns itself.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">loading</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">show</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">action</span> <span class="o">=</span> <span class="nx">show</span> <span class="o">===</span> <span class="kc">false</span> <span class="o">?</span> <span class="s1">&#39;enable&#39;</span> <span class="o">:</span> <span class="s1">&#39;disable&#39;</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;select&#39;</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s1">&#39;disabled&#39;</span><span class="p">,</span> <span class="nx">show</span> <span class="o">!==</span> <span class="kc">false</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">save</span><span class="p">.</span><span class="nx">button</span><span class="p">(</span><span class="nx">action</span><span class="p">);</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_updateSaveText</span><span class="p">(</span><span class="nx">show</span> <span class="o">===</span> <span class="kc">false</span> <span class="o">?</span> <span class="kc">null</span> <span class="o">:</span> <span class="s1">&#39;Loading...&#39;</span><span class="p">);</span>
+
+      <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-47">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-47">&#182;</a>               </div>               <p>Public: Toggles the saving state on the view.</p>
+
+<p>show - If false disables the saving state.</p>
+
+<p>Examples</p>
+
+<p>// Set the state to saving.
+  editor.saving();</p>
+
+<p>// Disable the saving state.
+  editor.saving(false);</p>
+
+<p>Returns itself.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">saving</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">show</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">disableSave</span><span class="p">(</span><span class="nx">show</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_updateSaveText</span><span class="p">(</span><span class="nx">show</span> <span class="o">===</span> <span class="kc">false</span> <span class="o">?</span> <span class="kc">null</span> <span class="o">:</span> <span class="s1">&#39;Saving...&#39;</span><span class="p">);</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-48">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-48">&#182;</a>               </div>               <p>Public: Toggles the save button state between enabled/disabled.</p>
+
+<p>disable - If false enables the button.</p>
+
+<p>Returns itself.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">disableSave</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">disable</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">save</span><span class="p">.</span><span class="nx">button</span><span class="p">(</span><span class="nx">disable</span> <span class="o">===</span> <span class="kc">false</span> <span class="o">?</span> <span class="s1">&#39;enable&#39;</span> <span class="o">:</span> <span class="s1">&#39;disable&#39;</span><span class="p">);</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-49">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-49">&#182;</a>               </div>               <p>Public: Event callback for the "Add series" button.</p>
+
+<p>event - A jQuery Event object.</p>
+
+<p>Examples</p>
+
+<p>$('button').click(event.onAdd);</p>
+
+<p>Returns nothing.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">onAdd</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">event</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">addSeries</span><span class="p">();</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-50">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-50">&#182;</a>               </div>               <p>Public: Event callback for the "Remove series" button.</p>
+
+<p>event - A jQuery Event object.</p>
+
+<p>Examples</p>
+
+<p>$('button').click(event.onRemove);</p>
+
+<p>Returns nothing.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">onRemove</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">event</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
+      <span class="kd">var</span> <span class="nx">element</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">).</span><span class="nx">parents</span><span class="p">(</span><span class="s1">&#39;.ckanext-datapreview-editor-series&#39;</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">removeSeries</span><span class="p">(</span><span class="nx">element</span><span class="p">);</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-51">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-51">&#182;</a>               </div>               <p>Public: Event callback for the "Save" button.</p>
+
+<p>Triggers the "save" event passing a chart object to all registered
+callbacks.</p>
+
+<p>event - A jQuery Event object.</p>
+
+<p>Examples</p>
+
+<p>$('button.save').click(editor.onSave);</p>
+
+<p>Returns nothing.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">onSave</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">event</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_triggerChartData</span><span class="p">(</span><span class="s1">&#39;save&#39;</span><span class="p">);</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-52">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-52">&#182;</a>               </div>               <p>Public: Event callback for the editor form.</p>
+
+<p>event - A jQuery Event object.</p>
+
+<p>Examples</p>
+
+<p>$('form.editor').submit(editor.onSubmit);</p>
+
+<p>Returns nothing.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">onSubmit</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">event</span> <span class="o">&amp;&amp;</span> <span class="nx">event</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">submit</span><span class="p">();</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-53">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-53">&#182;</a>               </div>               <p>Updates the text on the save button.</p>
+
+<p>If no text is provided reverts to the original button text.</p>
+
+<p>text - A text String to use in the button.</p>
+
+<p>Examples</p>
+
+<p>editor._updateSaveText('Now saving!');</p>
+
+<p>Returns nothing.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">_updateSaveText</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">text</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">span</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">save</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s1">&#39;span&#39;</span><span class="p">),</span>
+          <span class="nx">original</span> <span class="o">=</span> <span class="nx">span</span><span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="s1">&#39;default&#39;</span><span class="p">);</span>
+
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">original</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">span</span><span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="nx">span</span><span class="p">.</span><span class="nx">text</span><span class="p">());</span>
+      <span class="p">}</span>
+
+      <span class="nx">span</span><span class="p">.</span><span class="nx">text</span><span class="p">(</span><span class="nx">text</span> <span class="o">||</span> <span class="nx">original</span><span class="p">);</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-54">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-54">&#182;</a>               </div>               <p>Triggers an event on the editor and passes a chart object to callbacks.</p>
+
+<p>topic - Topic String for the event to fire.</p>
+
+<p>Examples</p>
+
+<p>editor.bind('save', function (chart) {
+    // DO something with the chart.
+  });
+  editor._triggerChartData('save');</p>
+
+<p>Returns</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">_triggerChartData</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">topic</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">series</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">series</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">val</span><span class="p">();</span>
+      <span class="p">});</span>
+
+      <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">trigger</span><span class="p">(</span><span class="nx">topic</span><span class="p">,</span> <span class="p">[{</span>
+        <span class="nx">id</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">id</span><span class="p">.</span><span class="nx">val</span><span class="p">(),</span>
+        <span class="nx">type</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">type</span><span class="p">.</span><span class="nx">val</span><span class="p">(),</span>
+        <span class="nx">groups</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">groups</span><span class="p">.</span><span class="nx">val</span><span class="p">(),</span>
+        <span class="nx">series</span><span class="o">:</span> <span class="nx">$</span><span class="p">.</span><span class="nx">makeArray</span><span class="p">(</span><span class="nx">series</span><span class="p">)</span>
+      <span class="p">}]);</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-55">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-55">&#182;</a>               </div>               <p>Finds an option by "value" in a select element and makes it selected.</p>
+
+<p>select - A jQuery wrapped select Element.
+option - The String value of the options "value" attribute.</p>
+
+<p>Examples</p>
+
+<p>// For <select><option value="bill">Bill</option></select>
+  editor._selectOption(mySelect, 'bill');</p>
+
+<p>Returns nothing.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">_selectOption</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">select</span><span class="p">,</span> <span class="nx">option</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">select</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s1">&#39;[value=&quot;&#39;</span> <span class="o">+</span> <span class="nx">option</span> <span class="o">+</span> <span class="s1">&#39;&quot;]&#39;</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s1">&#39;selected&#39;</span><span class="p">,</span> <span class="s1">&#39;selected&#39;</span><span class="p">);</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-56">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-56">&#182;</a>               </div>               <p>Creates a String of option elements.</p>
+
+<p>options - An object of value/text pairs.</p>
+
+<p>Examples</p>
+
+<p>var html = editor._createOptions({
+    value1: 'Value 1',
+    value2: 'Value 2'
+  });</p>
+
+<p>Returns a String of HTML.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">_createOptions</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">html</span> <span class="o">=</span> <span class="p">[];</span>
+      <span class="nx">$</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span><span class="nx">options</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">value</span><span class="p">,</span> <span class="nx">text</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">html</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s1">&#39;&lt;option value=&quot;&#39;</span> <span class="o">+</span> <span class="nx">value</span> <span class="o">+</span> <span class="s1">&#39;&quot;&gt;&#39;</span> <span class="o">+</span> <span class="nx">text</span> <span class="o">+</span> <span class="s1">&#39;&lt;/option&gt;&#39;</span><span class="p">);</span>
+      <span class="p">});</span>
+      <span class="k">return</span> <span class="nx">html</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-57">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-57">&#182;</a>               </div>               <p>Exports the UI and createDataPreview() methods onto the plugin object.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">$</span><span class="p">.</span><span class="nx">extend</span><span class="p">(</span><span class="kc">true</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="p">{</span><span class="nx">CKANEXT</span><span class="o">:</span> <span class="p">{</span><span class="nx">DATAPREVIEW</span><span class="o">:</span> <span class="p">{</span>
+
+    <span class="nx">UI</span><span class="o">:</span> <span class="nx">ui</span><span class="p">,</span></pre></div>             </td>           </tr>                               <tr id="section-58">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-58">&#182;</a>               </div>               <p>Public: Helper method for creating a new view.</p>
+
+<p>element - The main DOM Element used for the plugin.
+columns - The columns array for the data rows formatted for SlickGrid.
+data    - A data object formatted for use in SlickGrid.
+chart   - An optional chart object to load.</p>
+
+<p>Examples</p>
+
+<p>DATAPREVIEW.createDataPreview($('my-view'), columns, data);</p>
+
+<p>Returns a new instance of MainView.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">createDataPreview</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">element</span><span class="p">,</span> <span class="nx">columns</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">chart</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="k">new</span> <span class="nx">ui</span><span class="p">.</span><span class="nx">MainView</span><span class="p">(</span><span class="nx">element</span><span class="p">,</span> <span class="nx">columns</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">chart</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}}});</span>
+
+<span class="p">})(</span><span class="nx">jQuery</span><span class="p">);</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 
