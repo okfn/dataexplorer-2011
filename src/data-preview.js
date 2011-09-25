@@ -14,33 +14,9 @@
   // Key to use when saving the charts onto a resource.
   dp.resourceChartKey = 'datapreview-charts';
 
-  // An array of stylsheets to be loaded into the head.
-  dp.stylesheets = [
-     'lib/jquery-ui/css/ckan/jquery-ui-1.8.14.custom.css',
-     'lib/slickgrid/slick.grid.css',
-     'lib/slickgrid/slick.columnpicker.css'
-  ];
-
-  // Scripts to be loaded when required namspaced by plugin.
-  dp.scripts = {
-    'jquery-ui': [
-      'lib/jquery-ui/js/jquery-ui-1.8.14.custom.min.js',
-      'lib/jquery-ui/js/jquery.event.drag-2.0.min.js'
-    ],
-    'slickgrid': [
-      'lib/slickgrid/slick.grid.js',
-      'lib/slickgrid/slick.columnpicker.js'
-    ],
-    'flot': [
-      'lib/data-preview.ui.js',
-      'lib/flot/jquery.flot.js'
-    ]
-  };
-
   // Template url. The html property is populated on load.
   dp.template = {
-    html: '',
-    src: 'lib/data-preview.html'
+    html: ''
   };
 
   dp.normalizeFormat = function(format) {
@@ -71,62 +47,6 @@
                  .replace(/"/g, '&quot;')
                  .replace(/'/g, '&#x27')
                  .replace(/\//g,'&#x2F;');
-  };
-
-  // Public: Loads the dependancies required by the plugin.
-  //
-  // This allows the page to load quicly with only a minimal bootstrap
-  // to set up the UI. Then the rest of the script, stylesheets and templates
-  // are loaded when the user intiates the plugin.
-  //
-  // callback - A callback to fire once all dependancies are ready.
-  //
-  // Returns nothing.
-  //
-  dp.loadDependancies = function (callback) {
-    if (dp.areDependanciesLoaded) {
-      return callback();
-    }
-
-    var uiVersion = ($.ui && $.ui.version || '').split('.'),
-        scripts;
-
-    // Don't load jQuery UI if it exists on the page.
-    if (uiVersion[0] >= 1 && uiVersion[1] >= 8 && uiVersion[2] >= 14) {
-      dp.scripts['jquery-ui'].shift();
-    }
-
-    // Build an array of promise objects for each script to load.
-    scripts = $.map(dp.scripts['jquery-ui'], $.getScript);
-
-    // When all promises have completed load the next set of libraries.
-    $.when.apply($, scripts).then(function () {
-      scripts = $.map(dp.scripts['slickgrid'], $.getScript);
-      scripts = scripts.concat($.map(dp.scripts['flot'], $.getScript));
-
-      // Load the template file from the server.
-      scripts.push($.get(dp.template.src, function (html) {
-        dp.template.html = html;
-      }));
-
-      $.when.apply($, scripts).then(function () {
-        dp.areDependanciesLoaded = true;
-
-        var dialog = dp.$dialog;
-        dialog.dialog(dp.dialogOptions).dialog("widget").css('position', 'fixed');
-        callback();
-      });
-    });
-
-    // Prepend dependant stylesheets to the page (before the plugin stylesheet
-    // so we can take advantage of the cascade).
-    var pluginStylesheet = $('.ckanext-datapreview-stylesheet');
-    $.each(dp.stylesheets, function () {
-      pluginStylesheet.before($('<link />', {
-        rel: 'stylesheet',
-        href: this
-      }));
-    });
   };
 
   // Public: Requests the formatted resource data from the webstore and
@@ -491,14 +411,6 @@
     function callbackWrapper(callback) {
       return function () {
         var context = this, args = arguments;
-
-        preview.datasetRequest.complete(function () {
-          dp.loadDependancies(function () {
-            $(link).removeClass('resource-preview-loading').text('Preview');
-            callback.apply(context, args);
-            dp.$dialog.dialog('open');
-          });
-        });
       };
     }
 
