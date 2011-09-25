@@ -7,31 +7,10 @@
   // Time to wait for a JSONP request to timeout.
   dp.timeout = 5000;
 
-  // True when plugin dependancies have been loaded.
-  dp.areDependanciesLoaded = false;
-
-  // Key to use when saving the charts onto a resource.
-  dp.resourceChartKey = 'datapreview-charts';
-
-  // Template url. The html property is populated on load.
+  // Template url. The html property is populated from data-preview-templates.js
   dp.template = {
     html: ''
   };
-
-  dp.normalizeFormat = function(format) {
-    var out = format.toLowerCase();
-    out = out.split('/');
-    out = out[out.length-1];
-    return out;
-  };
-
-  dp.normalizeUrl = function(url) {
-    if (url.indexOf('https') === 0) {
-      return 'http' + url.slice(5);
-    } else {
-      return url;
-    }
-  }
 
   // Public: Escapes HTML entities to prevent broken layout and XSS attacks
   // when inserting user generated or external content.
@@ -48,56 +27,13 @@
                  .replace(/\//g,'&#x2F;');
   };
 
-  // Public: Requests the formatted resource data from the webstore and
-  // passes the data into the callback provided.
+  // **Public: Loads the plugin UI into the dialog and sets up event listeners.**
   //
-  // preview - A preview object containing resource metadata.
-  // callback - A Function to call with the data when loaded.
-  //
-  // Returns nothing.
-  //
-  dp.getResourceDataDirect = function(preview, callback) {
-    // $.ajax() does not call the "error" callback for JSONP requests so we
-    // set a timeout to provide the callback with an error after x seconds.
-    var timer = setTimeout(function error() {
-      callback(preview, {
-        error: {
-          title: 'Request Error',
-          message: 'Dataproxy server did not respond after ' + (dp.timeout / 1000) + ' seconds'
-        }
-      });
-    }, dp.timeout);
-
-    // have to set jsonp because webstore requires _callback but that breaks jsonpdataproxy
-    var jsonp = '_callback';
-    if (preview.url.indexOf('jsonpdataproxy') != -1) {
-      jsonp = 'callback';
-    }
-
-    // We need to provide the `cache: true` parameter to prevent jQuery appending
-    // a cache busting `={timestamp}` parameter to the query as the webstore
-    // currently cannot handle custom parameters.
-    $.ajax({
-      url: preview.url,
-      cache: true,
-      dataType: 'jsonp',
-      jsonp: jsonp,
-      success: function(data) {
-        clearTimeout(timer);
-        callback(preview, data);
-      }
-    });
-  };
-
-  // Public: Loads the plugin UI into the dialog and sets up event listeners.
-  //
-  // preview - A preview object containing resource data.
   // columns - Column Array formatted for use in SlickGrid.
   // data    - A data Array for use in SlickGrid.
   //
   // Returns nothing.
-  //
-  dp.loadDataPreview = function (preview, columns, data) {
+  dp.loadDataPreview = function (columns, data) {
     var dialog = dp.$dialog;
 
     // Need to create the grid once the dialog is open for cells to render
@@ -105,7 +41,6 @@
     dialog.dialog(dp.dialogOptions).one("dialogopen", function () {
       var element  = $(dp.template.html).appendTo(dialog);
       var viewer   = new dp.createDataPreview(element, columns, data);
-      var apiKey   = $.cookie('ckan_apikey');
 
       // Load chart data from external source
       // TODO: reinstate
@@ -131,14 +66,14 @@
 
   // Public: Sets up the dialog for displaying a full screen of data.
   //
-  // preview - A preview object containing resource data.
+  // dialogTitle - title for dialog window.
   //
   // Returns nothing.
   //
-  dp.setupFullscreenDialog = function (preview) {
+  dp.setupFullscreenDialog = function (dialogTitle) {
     var dialog = dp.$dialog, $window = $(window), timer;
 
-    dialog.empty().dialog('option', 'title', 'Preview: ' + preview.source);
+    dialog.empty().dialog('option', 'title', 'View: ' + dialogTitle);
 
     // Ensure the lightbox always fills the screen.
     $window.bind('resize.data-preview', function () {
@@ -173,20 +108,19 @@
   // This method also parses the data returned by the webstore for use in
   // the data preview UI.
   //
-  // preview - A preview object containing resource data.
   // data    - An object of parsed CSV data returned by the webstore.
   //
   // Returns nothing.
   //
-  dp.showData = function(preview, data) {
-    dp.setupFullscreenDialog(preview);
+  dp.showData = function(data) {
+    dp.setupFullscreenDialog();
 
     if(data.error) {
       return dp.showError(data.error);
     }
     var tabular = dp.convertData(data);
 
-    dp.loadDataPreview(preview, tabular.columns, tabular.data);
+    dp.loadDataPreview(tabular.columns, tabular.data);
   };
 
   // **Public: parse data from webstore or other source into form for data
@@ -273,75 +207,11 @@
     dp.$dialog.append(el).dialog('open');;
   };
 
-  // Public: Loads a data preview dialog for a preview button.
-  //
-  // Fetches the preview data object from the link provided and loads the
-  // parsed data from the webstore displaying it in the most appropriate
-  // manner.
-  //
-  // link - An anchor Element.
-  //
-  // Returns nothing.
-  //
-  dp.loadPreviewDialog = function(link) {
-    var preview  = $(link).data('preview');
-    preview.url  = dp.normalizeUrl(link.href);
-    preview.type = dp.normalizeFormat(preview.format);
-
-    function callbackWrapper(callback) {
-      return function () {
-        var context = this, args = arguments;
-      };
-    }
-
-    $(link).addClass('resource-preview-loading').text('Loading');
-
-    if (preview.type === '') {
-      var tmp = preview.url.split('/');
-      tmp = tmp[tmp.length - 1];
-      tmp = tmp.split('?'); // query strings
-      tmp = tmp[0];
-      var ext = tmp.split('.');
-      if (ext.length > 1) {
-        preview.type = ext[ext.length-1];
-      }
-    }
-
-    if (preview.type in {'csv': '', 'xls': ''}) {
-      dp.getResourceDataDirect(preview, callbackWrapper(dp.showData));
-    }
-    else if (preview.type in {
-        'rdf+xml': '',
-        'owl+xml': '',
-        'xml': '',
-        'n3': '',
-        'n-triples': '',
-        'turtle': '',
-        'plain': '',
-        'atom': '',
-        'tsv': '',
-        'rss': '',
-        'txt': ''
-        }) {
-      // treat as plain text
-      dp.getResourceDataDirect(preview, callbackWrapper(dp.showPlainTextData));
-    }
-    else {
-      // very hacky but should work
-      callbackWrapper(dp.showHtml)(preview.url);
-    }
-  };
-
   // Public: Kickstarts the plugin.
   //
   // dialogId    - The id of the dialog Element in the page.
   // options     - An object containing aditional options.
   //               timeout: Time in seconds to wait for a JSONP timeout.
-  //
-  // Examples
-  //
-  //   var url = 'http://test-webstore.ckan.net/okfn';
-  //   dp.initialize(url, '#dialog', {timeout: 3000});
   //
   // Returns nothing.
   //

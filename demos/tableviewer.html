@@ -28,21 +28,22 @@
   <script>
     jQuery(function ($) {
       var dp = CKANEXT.DATAPREVIEW;
+      // initialize the tableviewer system
       dp.initialize('ckanext-datapreview-dialog');
 
-      // Load a datasource without seting up the download links.
-      var dataSource = 'http://webstore.thedatahub.org/rufuspollock/gold_prices/data.jsonp?_limit=500';
-      // var dataSource = 'http://jsonpdataproxy.appspot.com/?url=http://old.openeconomics.net/store/thatcher_wages_middle_ages/data&type=csv'
-      var resource = {
-        'url': dataSource,
-      };
-
-      dp.getResourceDataDirect(resource, function (preview, data) {
-        dp.showData(preview, data);
-        dp.$dialog.dialog('open');
+      var url = 'http://webstore.thedatahub.org/rufuspollock/gold_prices/data.jsontuples?_limit=500';
+      // provide the `cache: true` parameter to prevent jQuery appending
+      // a cache busting `={timestamp}` parameter to the url
+      $.ajax({
+        url: url,
+        cache: true,
+        dataType: 'jsonp',
+        jsonp: '_callback',
+        success: function(data) {
+          dp.showData(data);
+          dp.$dialog.dialog('open');
+        }
       });
-
-      $.cookie = function () { return 'tester'; };
     });
   </script>
 </body>
