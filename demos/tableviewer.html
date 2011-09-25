@@ -23,26 +23,42 @@
   <script src="../src/data-preview-template.js"></script>
 </head>
 <body>
+  <form action="" method="GET">
+    <label for="url">Enter the url to a webstore table</label>
+    <input type="text" name="url" value="http://webstore.thedatahub.org/rufuspollock/gold_prices/data" />
+    <input type="submit" value="View &raquo;" />
+  </div>
+  </form>
   <div id="ckanext-datapreview-dialog"></div>
 
   <script>
     jQuery(function ($) {
       var dp = CKANEXT.DATAPREVIEW;
-      // initialize the tableviewer system
-      dp.initialize('ckanext-datapreview-dialog');
 
-      var url = 'http://webstore.thedatahub.org/rufuspollock/gold_prices/data.jsontuples?_limit=500';
-      // provide the `cache: true` parameter to prevent jQuery appending
-      // a cache busting `={timestamp}` parameter to the url
-      $.ajax({
-        url: url,
-        cache: true,
-        dataType: 'jsonp',
-        jsonp: '_callback',
-        success: function(data) {
-          dp.showData(data);
-          dp.$dialog.dialog('open');
-        }
+      $('form').submit(function(e) {
+        e.preventDefault();
+        var $form = $(e.target);
+        // get the webstore url
+        var url = $form.find('input[name="url"]').val();
+        url += '.jsontuples?_limit=500';
+
+        // initialize the tableviewer system
+        dp.initialize('ckanext-datapreview-dialog');
+
+        // fetch the data
+        $.ajax({
+          url: url,
+          // provide the `cache: true` parameter to prevent jQuery appending
+          // a cache busting `={timestamp}` parameter to the url
+          cache: true,
+          dataType: 'jsonp',
+          jsonp: '_callback',
+          success: function(data) {
+            // show the data using the TableViewer
+            dp.showData(data);
+            dp.$dialog.dialog('open');
+          }
+        });
       });
     });
   </script>
