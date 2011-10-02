@@ -1,7 +1,7 @@
 $(document).ready(function(){
 
 var dataproxyDialogId = 'our-dialog';
-var preview = CKANEXT.DATAPREVIEW;
+var preview = DATAEXPLORER.TABLEVIEW;
     
 test("normalizeFormat", function() {
   var data = {

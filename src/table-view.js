@@ -33,14 +33,14 @@
   // data    - A data Array for use in SlickGrid.
   //
   // Returns nothing.
-  dp.loadDataPreview = function (columns, data) {
+  dp.loadTableView = function (columns, data) {
     var dialog = dp.$dialog;
 
     // Need to create the grid once the dialog is open for cells to render
     // correctly.
     dialog.dialog(dp.dialogOptions).one("dialogopen", function () {
       var element  = $(dp.template.html).appendTo(dialog);
-      var viewer   = new dp.createDataPreview(element, columns, data);
+      var viewer   = new dp.createTableView(element, columns, data);
 
       // Load chart data from external source
       // TODO: reinstate
@@ -120,7 +120,7 @@
     }
     var tabular = dp.convertData(data);
 
-    dp.loadDataPreview(tabular.columns, tabular.data);
+    dp.loadTableView(tabular.columns, tabular.data);
   };
 
   // **Public: parse data from webstore or other source into form for data
@@ -254,8 +254,8 @@
     };
   };
 
-  // Export the CKANEXT object onto the window.
-  $.extend(true, window, {CKANEXT: {}});
-  CKANEXT.DATAPREVIEW = dp;
+  // Export the DATAEXPLORER object onto the window.
+  $.extend(true, window, {DATAEXPLORER: {}});
+  DATAEXPLORER.TABLEVIEW = dp;
 
 })(jQuery);

@@ -1,47 +1,47 @@
-#ckanext-datapreview-dialog table td {
+#dataexplorer-tableview-dialog table td {
 	background: #fff;
 	border: 1px solid #eee;
 	padding: 6px;
 	color: #555;
 }
 
-#ckanext-datapreview-dialog table thead td {
+#dataexplorer-tableview-dialog table thead td {
 	background: #444;
 	color: #fff;
 	border-color: #444;
 	border-bottom: none;
 }
 
-.ckanext-datapreview-viewer  {
+.dataexplorer-tableview-viewer  {
 	position: relative;
 	height: 100%;
 	overflow: hidden;
 }
 
-.ckanext-datapreview-nav  {
+.dataexplorer-tableview-nav  {
 	list-style-type: none;
 	margin: 0;
 	padding: 0;
 	height: 22px;
 }
 
-.ckanext-datapreview-nav-toggle  {
+.dataexplorer-tableview-nav-toggle  {
 	float: left;
 }
 
-.ckanext-datapreview-nav li {
+.dataexplorer-tableview-nav li {
 	float: left;
 }
 
-#ckanext-datapreview-nav-editor,
-label[for=ckanext-datapreview-nav-editor]  {
+#dataexplorer-tableview-nav-editor,
+label[for=dataexplorer-tableview-nav-editor]  {
 	float: right;
 }
 
 /* Adds border to left of data table */
-.ckanext-datapreview-grid,
-.ckanext-datapreview-graph,
-.ckanext-datapreview-editor {
+.dataexplorer-tableview-grid,
+.dataexplorer-tableview-graph,
+.dataexplorer-tableview-editor {
 	position: absolute;
 	left: 0;
 	right: 220px;
@@ -50,16 +50,16 @@ label[for=ckanext-datapreview-nav-editor]  {
 	z-index: 0;
 }
 
-.ckanext-datapreview-grid {
+.dataexplorer-tableview-grid {
 	border-left: 1px solid #ccc;
 }
 
-.ckanext-datapreview-graph {
+.dataexplorer-tableview-graph {
 	z-index: 1;
 	background-color: #fff;
 }
 
-.ckanext-datapreview-editor {
+.dataexplorer-tableview-editor {
 	z-index: 1;
 	background-color: #efefef;
 	right: 0;
@@ -71,69 +71,69 @@ label[for=ckanext-datapreview-nav-editor]  {
 	overflow-x: hidden;
 }
 
-.ckanext-datapreview-editor ul {
+.dataexplorer-tableview-editor ul {
 	list-style-type: none;
 	margin: 0;
 	padding: 0;
 	overflow: hidden;
 }
 
-.ckanext-datapreview-editor li {
+.dataexplorer-tableview-editor li {
 	margin-bottom: 10px;
 }
 
-.ckanext-datapreview-editor .ckanext-datapreview-editor-group {
+.dataexplorer-tableview-editor .dataexplorer-tableview-editor-group {
 	padding-bottom: 10px;
 	margin-bottom: 10px;
 	border-bottom: 1px solid #ddd;
 }
 
-.ckanext-datapreview-editor label {
+.dataexplorer-tableview-editor label {
 	display: block;
 	font-weight: bold;
 	color: #555;
 	line-height: 1.4;
 }
 
-.ckanext-datapreview-editor label a {
+.dataexplorer-tableview-editor label a {
 	float: right;
 	font-size: 11px;
 	color: #999;
 	font-weight: normal;
 }
 
-.ckanext-datapreview-editor select {
+.dataexplorer-tableview-editor select {
 	width: 100%;
 }
 
-.ckanext-datapreview-editor button {
+.dataexplorer-tableview-editor button {
 	float: right;
 }
 
-.ckanext-datapreview-editor-buttons {
+.dataexplorer-tableview-editor-buttons {
 	clear: right;
 	overflow: hidden;
 }
 
-.ckanext-datapreview-editor-submit {
+.dataexplorer-tableview-editor-submit {
 	margin-top: 10px;
 	padding-top: 10px;
 	border-top: 1px solid #ddd;
 }
 
-.ckanext-datapreview-editor-info {
+.dataexplorer-tableview-editor-info {
 	border-bottom: 1px solid #ddd;
 	margin-bottom: 10px;
 }
 
-.ckanext-datapreview-editor-info h1,
-.ckanext-datapreview-editor-info p {
+.dataexplorer-tableview-editor-info h1,
+.dataexplorer-tableview-editor-info p {
 	font-size: 12px;
 	margin: 0 0 10px;
 	color: #555;
 }
 
-.ckanext-datapreview-editor-info h1 {
+.dataexplorer-tableview-editor-info h1 {
 	line-height: 16px;
 	cursor: pointer;
 	font-family: sans-serif;
@@ -142,7 +142,7 @@ label[for=ckanext-datapreview-nav-editor]  {
 	margin: 0 0 4px;
 }
 
-.ckanext-datapreview-editor-info h1 span {
+.dataexplorer-tableview-editor-info h1 span {
 	position: relative;
 	top: 1px;
 	display: inline-block;
@@ -151,19 +151,19 @@ label[for=ckanext-datapreview-nav-editor]  {
 	background: url(jquery-ui/css/ckan/images/ui-icons_444444_256x240.png) no-repeat -68px -17px;
 }
 
-.ckanext-datapreview-editor-hide-info h1 span {
+.dataexplorer-tableview-editor-hide-info h1 span {
 	background-position: -36px -18px;
 }
 
-.ckanext-datapreview-editor-hide-info p {
+.dataexplorer-tableview-editor-hide-info p {
 	display: none;
 }
 
-.ckanext-datapreview-hide-editor .ckanext-datapreview-editor {
+.dataexplorer-tableview-hide-editor .dataexplorer-tableview-editor {
 	display: none;
 }
 
-.ckanext-datapreview-hide-editor .ckanext-datapreview-panel {
+.dataexplorer-tableview-hide-editor .dataexplorer-tableview-panel {
 	right: 0;
 }
 
