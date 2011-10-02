@@ -21,6 +21,8 @@
   <script src="../src/data-preview.js"></script>
   <script src="../src/data-preview.ui.js"></script>
   <script src="../src/data-preview-template.js"></script>
+  <!-- local cached demo data -->
+  <script src="data/goldprices.js"></script>
   <style type="text/css">
     .input-url {
       width: 500px;
@@ -51,19 +53,32 @@
   <script>
     jQuery(function ($) {
       var dp = CKANEXT.DATAPREVIEW;
+      function showData(data) {
+        $('.info').removeClass('loading');
+        // show the data using the TableViewer
+        dp.showData(data);
+        dp.$dialog.dialog('open');
+      }
 
       $('form').submit(function(e) {
         e.preventDefault();
-        $('.info').addClass('loading');
-        var $form = $(e.target);
-        // get the webstore url
-        var url = $form.find('input[name="url"]').val();
-        url += '.jsontuples?_limit=500';
-
         // initialize the tableviewer system
         dp.initialize('ckanext-datapreview-dialog');
+        // show we are doing something
+        $('.info').addClass('loading');
 
+        // get the webstore url
+        var $form = $(e.target);
+        var url = $form.find('input[name="url"]').val();
+
+        // local demo hack ...
+        if (url==='http://webstore.thedatahub.org/rufuspollock/gold_prices/data') {
+          showData(cache_goldprices);
+          return;
+        } 
+        // else normal setup ...
         // fetch the data
+        url += '.jsontuples?_limit=500';
         $.ajax({
           url: url,
           // provide the `cache: true` parameter to prevent jQuery appending
@@ -72,10 +87,7 @@
           dataType: 'jsonp',
           jsonp: '_callback',
           success: function(data) {
-            $('.info').removeClass('loading');
-            // show the data using the TableViewer
-            dp.showData(data);
-            dp.$dialog.dialog('open');
+            showData(data);
           }
         });
       });
