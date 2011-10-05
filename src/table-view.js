@@ -129,7 +129,6 @@
   // :param data: An object of parsed CSV data returned by the webstore.
   //
   // :return: parsed data.
-  //
   dp.convertData = function(data) {
     var tabular = {
       columns: [],
@@ -167,44 +166,6 @@
       });
     }
     return tabular;
-  };
-
-  // Public: Displays a String of data in a fullscreen dialog.
-  //
-  // preview - A preview object containing resource data.
-  // data    - An object of parsed CSV data returned by the webstore.
-  //
-  // Returns nothing.
-  //
-  dp.showPlainTextData = function(preview, data) {
-    dp.setupFullscreenDialog(preview);
-
-    if(data.error) {
-      dp.showError(data.error);
-    } else {
-      var content = $('<pre></pre>');
-      for (var i=0; i<data.data.length; i++) {
-        var row = data.data[i].join(',') + '\n';
-        content.append(dp.escapeHTML(row));
-      }
-      dp.$dialog.dialog('option', dp.dialogOptions).append(content);
-    }
-  };
-
-  // Public: Displays a fullscreen dialog with the url in an iframe.
-  //
-  // url - The URL to load into an iframe.
-  //
-  // Returns nothing.
-  //
-  dp.showHtml = function(url) {
-    dp.$dialog.empty();
-    dp.$dialog.dialog('option', 'title', 'Preview: ' + url);
-    var el = $('<iframe></iframe>');
-    el.attr('src', url);
-    el.attr('width', '100%');
-    el.attr('height', '100%');
-    dp.$dialog.append(el).dialog('open');;
   };
 
   // Public: Kickstarts the plugin.
