@@ -1,14 +1,14 @@
-<!DOCTYPE html>  <html> <head>   <title>data-preview.ui.js</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="data-preview.html">                 data-preview.js               </a>                                           <a class="source" href="data-preview.ui.html">                 data-preview.ui.js               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               data-preview.ui.js             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>               <p>This file contains all of the UI elements aside from the containing element
+<!DOCTYPE html>  <html> <head>   <title>table-view.ui.js</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="table-view-template.html">                 table-view-template.js               </a>                                           <a class="source" href="table-view.html">                 table-view.js               </a>                                           <a class="source" href="table-view.ui.html">                 table-view.ui.js               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               table-view.ui.js             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>               <p>This file contains all of the UI elements aside from the containing element
 (ie. lightbox) used to build the datapreview widget. The MainView should
 be initiated with an element containing the elements required by the
 subviews.</p>
 
-<p>Use DATAPREVIEW.createDataPreview() to create new instances of MainView.</p>
+<p>Use TABLEVIEW.createTableView() to create new instances of MainView.</p>
 
 <p>Examples</p>
 
 <p>var $element = $(templateString);
-  var datapreview = DATAPREVIEW.createDataPreview($element);</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">$</span><span class="p">,</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
+  var datapreview = TABLEVIEW.createTableView($element);</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">$</span><span class="p">,</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
 
   <span class="kd">var</span> <span class="nx">ui</span> <span class="o">=</span> <span class="p">{};</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <p>Binds methods on an object to always be called with the object as the
 method context.</p>
@@ -220,10 +220,10 @@ chart   - A chart object to load.</p>
       <span class="nx">bindAll</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="s1">&#39;redraw&#39;</span><span class="p">,</span> <span class="s1">&#39;onNavChange&#39;</span><span class="p">,</span> <span class="s1">&#39;onNavToggleEditor&#39;</span><span class="p">,</span> <span class="s1">&#39;onEditorSubmit&#39;</span><span class="p">);</span>
 
       <span class="kd">var</span> <span class="nx">view</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">nav</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ui</span><span class="p">.</span><span class="nx">NavigationView</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;.ckanext-datapreview-nav&#39;</span><span class="p">));</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">grid</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ui</span><span class="p">.</span><span class="nx">GridView</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;.ckanext-datapreview-grid&#39;</span><span class="p">),</span> <span class="nx">columns</span><span class="p">,</span> <span class="nx">data</span><span class="p">);</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">chart</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ui</span><span class="p">.</span><span class="nx">ChartView</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;.ckanext-datapreview-graph&#39;</span><span class="p">),</span> <span class="nx">columns</span><span class="p">,</span> <span class="nx">data</span><span class="p">);</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">editor</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ui</span><span class="p">.</span><span class="nx">EditorView</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;.ckanext-datapreview-editor&#39;</span><span class="p">),</span> <span class="nx">columns</span><span class="p">,</span> <span class="nx">chart</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">nav</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ui</span><span class="p">.</span><span class="nx">NavigationView</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;.dataexplorer-tableview-nav&#39;</span><span class="p">));</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">grid</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ui</span><span class="p">.</span><span class="nx">GridView</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;.dataexplorer-tableview-grid&#39;</span><span class="p">),</span> <span class="nx">columns</span><span class="p">,</span> <span class="nx">data</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">chart</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ui</span><span class="p">.</span><span class="nx">ChartView</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;.dataexplorer-tableview-graph&#39;</span><span class="p">),</span> <span class="nx">columns</span><span class="p">,</span> <span class="nx">data</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">editor</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ui</span><span class="p">.</span><span class="nx">EditorView</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;.dataexplorer-tableview-editor&#39;</span><span class="p">),</span> <span class="nx">columns</span><span class="p">,</span> <span class="nx">chart</span><span class="p">);</span>
 
       <span class="k">this</span><span class="p">.</span><span class="nx">nav</span><span class="p">.</span><span class="nx">bind</span><span class="p">({</span>
         <span class="s1">&#39;change&#39;</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">onNavChange</span><span class="p">,</span>
@@ -234,8 +234,8 @@ chart   - A chart object to load.</p>
         <span class="s1">&#39;submit&#39;</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">onEditorSubmit</span>
       <span class="p">});</span>
 
-      <span class="k">this</span><span class="p">.</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;.ckanext-datapreview-editor-info h1&#39;</span><span class="p">).</span><span class="nx">click</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
-        <span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">parent</span><span class="p">().</span><span class="nx">toggleClass</span><span class="p">(</span><span class="s1">&#39;ckanext-datapreview-editor-hide-info&#39;</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;.dataexplorer-tableview-editor-info h1&#39;</span><span class="p">).</span><span class="nx">click</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">parent</span><span class="p">().</span><span class="nx">toggleClass</span><span class="p">(</span><span class="s1">&#39;dataexplorer-tableview-editor-hide-info&#39;</span><span class="p">);</span>
       <span class="p">});</span>
 
       <span class="k">this</span><span class="p">.</span><span class="nx">chart</span><span class="p">.</span><span class="nx">hide</span><span class="p">();</span>
@@ -268,7 +268,7 @@ chart   - A chart object to load.</p>
 <p>showEditor - True if the editor should be visible.</p>
 
 <p>Returns nothing.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">onNavToggleEditor</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">showEditor</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">el</span><span class="p">.</span><span class="nx">toggleClass</span><span class="p">(</span><span class="s1">&#39;ckanext-datapreview-hide-editor&#39;</span><span class="p">,</span> <span class="o">!</span><span class="nx">showEditor</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">el</span><span class="p">.</span><span class="nx">toggleClass</span><span class="p">(</span><span class="s1">&#39;dataexplorer-tableview-hide-editor&#39;</span><span class="p">,</span> <span class="o">!</span><span class="nx">showEditor</span><span class="p">);</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">redraw</span><span class="p">();</span>
     <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-17">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-17">&#182;</a>               </div>               <p>Public: Updates the chart view when the editor is submitted.</p>
 
@@ -287,7 +287,7 @@ buttons are clicked within the view.</p>
 
 <p>Examples</p>
 
-<p>var nav = new NavigationView($('.ckanext-datapreview-nav'));</p>
+<p>var nav = new NavigationView($('.dataexplorer-tableview-nav'));</p>
 
 <p>// Recieve events when the navigation buttons are clicked.
   nav.bind('change', onNavigationChangeHandler);</p>
@@ -298,10 +298,10 @@ buttons are clicked within the view.</p>
 
       <span class="nx">bindAll</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="s1">&#39;onEditorToggleChange&#39;</span><span class="p">,</span> <span class="s1">&#39;onPanelToggleChange&#39;</span><span class="p">);</span>
 
-      <span class="k">this</span><span class="p">.</span><span class="nx">panelButtons</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;.ckanext-datapreview-nav-toggle&#39;</span><span class="p">).</span><span class="nx">buttonset</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">panelButtons</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;.dataexplorer-tableview-nav-toggle&#39;</span><span class="p">).</span><span class="nx">buttonset</span><span class="p">();</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">panelButtons</span><span class="p">.</span><span class="nx">change</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">onPanelToggleChange</span><span class="p">);</span>
 
-      <span class="k">this</span><span class="p">.</span><span class="nx">editorButton</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#ckanext-datapreview-nav-editor&#39;</span><span class="p">).</span><span class="nx">button</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">editorButton</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#dataexplorer-tableview-nav-editor&#39;</span><span class="p">).</span><span class="nx">button</span><span class="p">();</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">editorButton</span><span class="p">.</span><span class="nx">change</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">onEditorToggleChange</span><span class="p">);</span>
     <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-19">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-19">&#182;</a>               </div>               <p>Public: Toggles a navigation button.</p>
 
@@ -343,7 +343,7 @@ options - Additional instance and SlickGrid options.</p>
 
 <p>Examples</p>
 
-<p>var grid = new GridView($('.ckanext-datapreview-grid'), columns, data);</p>
+<p>var grid = new GridView($('.dataexplorer-tableview-grid'), columns, data);</p>
 
 <p>Returns a new instance of GridView.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">ui</span><span class="p">.</span><span class="nx">GridView</span> <span class="o">=</span> <span class="nx">inherit</span><span class="p">(</span><span class="nx">ui</span><span class="p">.</span><span class="nx">View</span><span class="p">,</span> <span class="p">{</span>
     <span class="nx">constructor</span><span class="o">:</span> <span class="kd">function</span> <span class="nx">GridView</span><span class="p">(</span><span class="nx">element</span><span class="p">,</span> <span class="nx">columns</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
@@ -438,7 +438,7 @@ chart   - Optional chart data to load.</p>
 
 <p>Examples</p>
 
-<p>new ChartView($('.ckanext-datapreview-chart'), columns, data, {
+<p>new ChartView($('.dataexplorer-tableview-chart'), columns, data, {
     id: 'my-chart-id',  // Any unique id for the chart used for storage.
     type: 'line',       // ID of one of the ChartView.TYPES.
     groups: 'column-2', // The column to use as the x-axis.
@@ -605,7 +605,7 @@ chart   - Optional chart Object to display on load.</p>
 
 <p>Examples</p>
 
-<p>new EditorView($('.ckanext-datapreview-editor'), columns, {
+<p>new EditorView($('.dataexplorer-tableview-editor'), columns, {
     id: 'my-chart-id',
     type: 'line',
     groups: 'column-2',
@@ -619,18 +619,18 @@ chart   - Optional chart Object to display on load.</p>
       <span class="nx">bindAll</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="s1">&#39;onAdd&#39;</span><span class="p">,</span> <span class="s1">&#39;onRemove&#39;</span><span class="p">,</span> <span class="s1">&#39;onSubmit&#39;</span><span class="p">,</span> <span class="s1">&#39;onSave&#39;</span><span class="p">);</span>
 
       <span class="k">this</span><span class="p">.</span><span class="nx">columns</span> <span class="o">=</span> <span class="nx">columns</span><span class="p">;</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">type</span>    <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;.ckanext-datapreview-editor-type select&#39;</span><span class="p">);</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">groups</span>  <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;.ckanext-datapreview-editor-group select&#39;</span><span class="p">);</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">series</span>  <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;.ckanext-datapreview-editor-series select&#39;</span><span class="p">);</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">id</span>      <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;.ckanext-datapreview-editor-id&#39;</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">type</span>    <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;.dataexplorer-tableview-editor-type select&#39;</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">groups</span>  <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;.dataexplorer-tableview-editor-group select&#39;</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">series</span>  <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;.dataexplorer-tableview-editor-series select&#39;</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">id</span>      <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;.dataexplorer-tableview-editor-id&#39;</span><span class="p">);</span>
 
       <span class="k">this</span><span class="p">.</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;button&#39;</span><span class="p">).</span><span class="nx">button</span><span class="p">();</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">save</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;.ckanext-datapreview-editor-save&#39;</span><span class="p">).</span><span class="nx">click</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">onSave</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">save</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;.dataexplorer-tableview-editor-save&#39;</span><span class="p">).</span><span class="nx">click</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">onSave</span><span class="p">);</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">el</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="s1">&#39;submit&#39;</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">onSubmit</span><span class="p">);</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">el</span><span class="p">.</span><span class="nx">delegate</span><span class="p">(</span><span class="s1">&#39;a[href=&quot;#remove&quot;]&#39;</span><span class="p">,</span> <span class="s1">&#39;click&#39;</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">onRemove</span><span class="p">);</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">el</span><span class="p">.</span><span class="nx">delegate</span><span class="p">(</span><span class="s1">&#39;select&#39;</span><span class="p">,</span> <span class="s1">&#39;change&#39;</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">onSubmit</span><span class="p">);</span>
 
-      <span class="k">this</span><span class="p">.</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;.ckanext-datapreview-editor-add&#39;</span><span class="p">).</span><span class="nx">click</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">onAdd</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;.dataexplorer-tableview-editor-add&#39;</span><span class="p">).</span><span class="nx">click</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">onAdd</span><span class="p">);</span>
 
       <span class="k">this</span><span class="p">.</span><span class="nx">setupTypeOptions</span><span class="p">().</span><span class="nx">setupColumnOptions</span><span class="p">();</span>
 
@@ -705,7 +705,7 @@ to be removed.</p>
     <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-43">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-43">&#182;</a>               </div>               <p>Public: Resets the series property to reference the select elements.</p>
 
 <p>Returns itself.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">updateSeries</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">series</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;.ckanext-datapreview-editor-series select&#39;</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">series</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;.dataexplorer-tableview-editor-series select&#39;</span><span class="p">);</span>
       <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
     <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-44">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-44">&#182;</a>               </div>               <p>Public: Loads a chart into the editor.</p>
 
@@ -812,7 +812,7 @@ to be removed.</p>
 
 <p>Returns nothing.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">onRemove</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
       <span class="nx">event</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
-      <span class="kd">var</span> <span class="nx">element</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">).</span><span class="nx">parents</span><span class="p">(</span><span class="s1">&#39;.ckanext-datapreview-editor-series&#39;</span><span class="p">);</span>
+      <span class="kd">var</span> <span class="nx">element</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">).</span><span class="nx">parents</span><span class="p">(</span><span class="s1">&#39;.dataexplorer-tableview-editor-series&#39;</span><span class="p">);</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">removeSeries</span><span class="p">(</span><span class="nx">element</span><span class="p">);</span>
     <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-51">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-51">&#182;</a>               </div>               <p>Public: Event callback for the "Save" button.</p>
 
@@ -910,7 +910,7 @@ option - The String value of the options "value" attribute.</p>
       <span class="p">});</span>
       <span class="k">return</span> <span class="nx">html</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">);</span>
     <span class="p">}</span>
-  <span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-57">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-57">&#182;</a>               </div>               <p>Exports the UI and createDataPreview() methods onto the plugin object.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">$</span><span class="p">.</span><span class="nx">extend</span><span class="p">(</span><span class="kc">true</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="p">{</span><span class="nx">CKANEXT</span><span class="o">:</span> <span class="p">{</span><span class="nx">DATAPREVIEW</span><span class="o">:</span> <span class="p">{</span>
+  <span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-57">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-57">&#182;</a>               </div>               <p>Exports the UI and createTableView() methods onto the plugin object.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">$</span><span class="p">.</span><span class="nx">extend</span><span class="p">(</span><span class="kc">true</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="p">{</span><span class="nx">DATAEXPLORER</span><span class="o">:</span> <span class="p">{</span><span class="nx">TABLEVIEW</span><span class="o">:</span> <span class="p">{</span>
 
     <span class="nx">UI</span><span class="o">:</span> <span class="nx">ui</span><span class="p">,</span></pre></div>             </td>           </tr>                               <tr id="section-58">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-58">&#182;</a>               </div>               <p>Public: Helper method for creating a new view.</p>
 
@@ -921,9 +921,9 @@ chart   - An optional chart object to load.</p>
 
 <p>Examples</p>
 
-<p>DATAPREVIEW.createDataPreview($('my-view'), columns, data);</p>
+<p>TABLEVIEW.createTableView($('my-view'), columns, data);</p>
 
-<p>Returns a new instance of MainView.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">createDataPreview</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">element</span><span class="p">,</span> <span class="nx">columns</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">chart</span><span class="p">)</span> <span class="p">{</span>
+<p>Returns a new instance of MainView.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">createTableView</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">element</span><span class="p">,</span> <span class="nx">columns</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">chart</span><span class="p">)</span> <span class="p">{</span>
       <span class="k">return</span> <span class="k">new</span> <span class="nx">ui</span><span class="p">.</span><span class="nx">MainView</span><span class="p">(</span><span class="nx">element</span><span class="p">,</span> <span class="nx">columns</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">chart</span><span class="p">);</span>
     <span class="p">}</span>
   <span class="p">}}});</span>
