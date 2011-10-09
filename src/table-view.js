@@ -12,21 +12,6 @@
     html: ''
   };
 
-  // Public: Escapes HTML entities to prevent broken layout and XSS attacks
-  // when inserting user generated or external content.
-  //
-  // string - A String of HTML.
-  //
-  // Returns a String with HTML special characters converted to entities.
-  //
-  dp.escapeHTML = function (string) {
-    return string.replace(/&(?!\w+;|#\d+;|#x[\da-f]+;)/gi, '&amp;')
-                 .replace(/</g, '&lt;').replace(/>/g, '&gt;')
-                 .replace(/"/g, '&quot;')
-                 .replace(/'/g, '&#x27')
-                 .replace(/\//g,'&#x2F;');
-  };
-
   // **Public: Loads the plugin UI into the dialog and sets up event listeners.**
   //
   // columns - Column Array formatted for use in SlickGrid.
