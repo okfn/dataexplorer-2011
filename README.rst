@@ -12,6 +12,23 @@ It's similar to applications like ManyEyes or the Google Visualization Tools
 
 .. _DataExplorer: http://wiki.ckan.org/DataExplorer
 
+Screenshots
+===========
+
+Table Viewer: Table
+-------------------
+
+This uses SlickGrid.
+
+.. image:: http://farm7.static.flickr.com/6042/6226013125_da93b98ab4_z.jpg
+
+Table Viewer: Graph
+-------------------
+
+This uses flot.
+
+.. image:: http://farm7.static.flickr.com/6234/6226013181_3a517f9c84_z.jpg
+
 
 Install
 =======
