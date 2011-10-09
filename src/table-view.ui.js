@@ -3,12 +3,12 @@
 // be initiated with an element containing the elements required by the
 // subviews.
 //
-// Use DATAPREVIEW.createDataPreview() to create new instances of MainView.
+// Use TABLEVIEW.createTableView() to create new instances of MainView.
 //
 // Examples
 //
 //   var $element = $(templateString);
-//   var datapreview = DATAPREVIEW.createDataPreview($element);
+//   var datapreview = TABLEVIEW.createTableView($element);
 //
 //
 (function ($, undefined) {
@@ -270,10 +270,10 @@
       bindAll(this, 'redraw', 'onNavChange', 'onNavToggleEditor', 'onEditorSubmit');
 
       var view = this;
-      this.nav = new ui.NavigationView(this.$('.ckanext-datapreview-nav'));
-      this.grid = new ui.GridView(this.$('.ckanext-datapreview-grid'), columns, data);
-      this.chart = new ui.ChartView(this.$('.ckanext-datapreview-graph'), columns, data);
-      this.editor = new ui.EditorView(this.$('.ckanext-datapreview-editor'), columns, chart);
+      this.nav = new ui.NavigationView(this.$('.dataexplorer-tableview-nav'));
+      this.grid = new ui.GridView(this.$('.dataexplorer-tableview-grid'), columns, data);
+      this.chart = new ui.ChartView(this.$('.dataexplorer-tableview-graph'), columns, data);
+      this.editor = new ui.EditorView(this.$('.dataexplorer-tableview-editor'), columns, chart);
 
       this.nav.bind({
         'change': this.onNavChange,
@@ -284,8 +284,8 @@
         'submit': this.onEditorSubmit
       });
 
-      this.$('.ckanext-datapreview-editor-info h1').click(function () {
-        $(this).parent().toggleClass('ckanext-datapreview-editor-hide-info');
+      this.$('.dataexplorer-tableview-editor-info h1').click(function () {
+        $(this).parent().toggleClass('dataexplorer-tableview-editor-hide-info');
       });
 
       this.chart.hide();
@@ -330,7 +330,7 @@
     // Returns nothing.
     //
     onNavToggleEditor: function (showEditor) {
-      this.el.toggleClass('ckanext-datapreview-hide-editor', !showEditor);
+      this.el.toggleClass('dataexplorer-tableview-hide-editor', !showEditor);
       this.redraw();
     },
 
@@ -355,7 +355,7 @@
   //
   // Examples
   //
-  //   var nav = new NavigationView($('.ckanext-datapreview-nav'));
+  //   var nav = new NavigationView($('.dataexplorer-tableview-nav'));
   //
   //   // Recieve events when the navigation buttons are clicked.
   //   nav.bind('change', onNavigationChangeHandler);
@@ -368,10 +368,10 @@
 
       bindAll(this, 'onEditorToggleChange', 'onPanelToggleChange');
 
-      this.panelButtons = this.$('.ckanext-datapreview-nav-toggle').buttonset();
+      this.panelButtons = this.$('.dataexplorer-tableview-nav-toggle').buttonset();
       this.panelButtons.change(this.onPanelToggleChange);
 
-      this.editorButton = this.$('#ckanext-datapreview-nav-editor').button();
+      this.editorButton = this.$('#dataexplorer-tableview-nav-editor').button();
       this.editorButton.change(this.onEditorToggleChange);
     },
 
@@ -429,7 +429,7 @@
   //
   // Examples
   //
-  //   var grid = new GridView($('.ckanext-datapreview-grid'), columns, data);
+  //   var grid = new GridView($('.dataexplorer-tableview-grid'), columns, data);
   //
   // Returns a new instance of GridView.
   //
@@ -543,7 +543,7 @@
   //
   // Examples
   //
-  //   new ChartView($('.ckanext-datapreview-chart'), columns, data, {
+  //   new ChartView($('.dataexplorer-tableview-chart'), columns, data, {
   //     id: 'my-chart-id',  // Any unique id for the chart used for storage.
   //     type: 'line',       // ID of one of the ChartView.TYPES.
   //     groups: 'column-2', // The column to use as the x-axis.
@@ -745,7 +745,7 @@
   //
   // Examples
   //
-  //   new EditorView($('.ckanext-datapreview-editor'), columns, {
+  //   new EditorView($('.dataexplorer-tableview-editor'), columns, {
   //     id: 'my-chart-id',
   //     type: 'line',
   //     groups: 'column-2',
@@ -761,18 +761,18 @@
       bindAll(this, 'onAdd', 'onRemove', 'onSubmit', 'onSave');
 
       this.columns = columns;
-      this.type    = this.$('.ckanext-datapreview-editor-type select');
-      this.groups  = this.$('.ckanext-datapreview-editor-group select');
-      this.series  = this.$('.ckanext-datapreview-editor-series select');
-      this.id      = this.$('.ckanext-datapreview-editor-id');
+      this.type    = this.$('.dataexplorer-tableview-editor-type select');
+      this.groups  = this.$('.dataexplorer-tableview-editor-group select');
+      this.series  = this.$('.dataexplorer-tableview-editor-series select');
+      this.id      = this.$('.dataexplorer-tableview-editor-id');
 
       this.$('button').button();
-      this.save = this.$('.ckanext-datapreview-editor-save').click(this.onSave);
+      this.save = this.$('.dataexplorer-tableview-editor-save').click(this.onSave);
       this.el.bind('submit', this.onSubmit);
       this.el.delegate('a[href="#remove"]', 'click', this.onRemove);
       this.el.delegate('select', 'change', this.onSubmit);
 
-      this.$('.ckanext-datapreview-editor-add').click(this.onAdd);
+      this.$('.dataexplorer-tableview-editor-add').click(this.onAdd);
 
       this.setupTypeOptions().setupColumnOptions();
 
@@ -869,7 +869,7 @@
     // Returns itself.
     //
     updateSeries: function () {
-      this.series = this.$('.ckanext-datapreview-editor-series select');
+      this.series = this.$('.dataexplorer-tableview-editor-series select');
       return this;
     },
 
@@ -1004,7 +1004,7 @@
     //
     onRemove: function (event) {
       event.preventDefault();
-      var element = $(event.target).parents('.ckanext-datapreview-editor-series');
+      var element = $(event.target).parents('.dataexplorer-tableview-editor-series');
       this.removeSeries(element);
     },
 
@@ -1128,8 +1128,8 @@
     }
   });
 
-  // Exports the UI and createDataPreview() methods onto the plugin object.
-  $.extend(true, this, {CKANEXT: {DATAPREVIEW: {
+  // Exports the UI and createTableView() methods onto the plugin object.
+  $.extend(true, this, {DATAEXPLORER: {TABLEVIEW: {
 
     UI: ui,
 
@@ -1142,11 +1142,11 @@
     //
     // Examples
     //
-    //   DATAPREVIEW.createDataPreview($('my-view'), columns, data);
+    //   TABLEVIEW.createTableView($('my-view'), columns, data);
     //
     // Returns a new instance of MainView.
     //
-    createDataPreview: function (element, columns, data, chart) {
+    createTableView: function (element, columns, data, chart) {
       return new ui.MainView(element, columns, data, chart);
     }
   }}});

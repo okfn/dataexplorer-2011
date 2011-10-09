@@ -6,7 +6,7 @@
   <link rel="stylesheet" href="../vendor/jquery-ui/css/ckan/jquery-ui-1.8.14.custom.css" />
   <link rel="stylesheet" href="../vendor/slickgrid/slick.grid.css" />
   <link rel="stylesheet" href="../vendor/slickgrid/slick.columnpicker.css" />
-  <link rel="stylesheet" href="../src/data-preview.css" />
+  <link rel="stylesheet" href="../src/table-view.css" />
 
   <!-- required external libs -->
   <script src="../vendor/jquery/1.6.2/jquery.js"></script>
@@ -18,9 +18,11 @@
   <script type="text/javascript" src="../vendor/flot/0.7/jquery.flot.js"></script>
   <!-- /required external libs -->
 
-  <script src="../src/data-preview.js"></script>
-  <script src="../src/data-preview.ui.js"></script>
-  <script src="../src/data-preview-template.js"></script>
+  <script src="../src/table-view.js"></script>
+  <script src="../src/table-view.ui.js"></script>
+  <script src="../src/table-view-template.js"></script>
+  <!-- local cached demo data -->
+  <script src="data/goldprices.js"></script>
   <style type="text/css">
     .input-url {
       width: 500px;
@@ -50,20 +52,33 @@
 
   <script>
     jQuery(function ($) {
-      var dp = CKANEXT.DATAPREVIEW;
+      var dp = DATAEXPLORER.TABLEVIEW;
+      function showData(data) {
+        $('.info').removeClass('loading');
+        // show the data using the TableViewer
+        dp.showData(data);
+        dp.$dialog.dialog('open');
+      }
 
       $('form').submit(function(e) {
         e.preventDefault();
-        $('.info').addClass('loading');
-        var $form = $(e.target);
-        // get the webstore url
-        var url = $form.find('input[name="url"]').val();
-        url += '.jsontuples?_limit=500';
-
         // initialize the tableviewer system
         dp.initialize('ckanext-datapreview-dialog');
+        // show we are doing something
+        $('.info').addClass('loading');
 
+        // get the webstore url
+        var $form = $(e.target);
+        var url = $form.find('input[name="url"]').val();
+
+        // local demo hack ...
+        if (url==='http://webstore.thedatahub.org/rufuspollock/gold_prices/data') {
+          showData(cache_goldprices);
+          return;
+        } 
+        // else normal setup ...
         // fetch the data
+        url += '.jsontuples?_limit=500';
         $.ajax({
           url: url,
           // provide the `cache: true` parameter to prevent jQuery appending
@@ -72,10 +87,7 @@
           dataType: 'jsonp',
           jsonp: '_callback',
           success: function(data) {
-            $('.info').removeClass('loading');
-            // show the data using the TableViewer
-            dp.showData(data);
-            dp.$dialog.dialog('open');
+            showData(data);
           }
         });
       });

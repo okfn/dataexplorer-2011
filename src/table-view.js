@@ -12,35 +12,20 @@
     html: ''
   };
 
-  // Public: Escapes HTML entities to prevent broken layout and XSS attacks
-  // when inserting user generated or external content.
-  //
-  // string - A String of HTML.
-  //
-  // Returns a String with HTML special characters converted to entities.
-  //
-  dp.escapeHTML = function (string) {
-    return string.replace(/&(?!\w+;|#\d+;|#x[\da-f]+;)/gi, '&amp;')
-                 .replace(/</g, '&lt;').replace(/>/g, '&gt;')
-                 .replace(/"/g, '&quot;')
-                 .replace(/'/g, '&#x27')
-                 .replace(/\//g,'&#x2F;');
-  };
-
   // **Public: Loads the plugin UI into the dialog and sets up event listeners.**
   //
   // columns - Column Array formatted for use in SlickGrid.
   // data    - A data Array for use in SlickGrid.
   //
   // Returns nothing.
-  dp.loadDataPreview = function (columns, data) {
+  dp.loadTableView = function (columns, data) {
     var dialog = dp.$dialog;
 
     // Need to create the grid once the dialog is open for cells to render
     // correctly.
     dialog.dialog(dp.dialogOptions).one("dialogopen", function () {
       var element  = $(dp.template.html).appendTo(dialog);
-      var viewer   = new dp.createDataPreview(element, columns, data);
+      var viewer   = new dp.createTableView(element, columns, data);
 
       // Load chart data from external source
       // TODO: reinstate
@@ -120,7 +105,7 @@
     }
     var tabular = dp.convertData(data);
 
-    dp.loadDataPreview(tabular.columns, tabular.data);
+    dp.loadTableView(tabular.columns, tabular.data);
   };
 
   // **Public: parse data from webstore or other source into form for data
@@ -129,7 +114,6 @@
   // :param data: An object of parsed CSV data returned by the webstore.
   //
   // :return: parsed data.
-  //
   dp.convertData = function(data) {
     var tabular = {
       columns: [],
@@ -167,44 +151,6 @@
       });
     }
     return tabular;
-  };
-
-  // Public: Displays a String of data in a fullscreen dialog.
-  //
-  // preview - A preview object containing resource data.
-  // data    - An object of parsed CSV data returned by the webstore.
-  //
-  // Returns nothing.
-  //
-  dp.showPlainTextData = function(preview, data) {
-    dp.setupFullscreenDialog(preview);
-
-    if(data.error) {
-      dp.showError(data.error);
-    } else {
-      var content = $('<pre></pre>');
-      for (var i=0; i<data.data.length; i++) {
-        var row = data.data[i].join(',') + '\n';
-        content.append(dp.escapeHTML(row));
-      }
-      dp.$dialog.dialog('option', dp.dialogOptions).append(content);
-    }
-  };
-
-  // Public: Displays a fullscreen dialog with the url in an iframe.
-  //
-  // url - The URL to load into an iframe.
-  //
-  // Returns nothing.
-  //
-  dp.showHtml = function(url) {
-    dp.$dialog.empty();
-    dp.$dialog.dialog('option', 'title', 'Preview: ' + url);
-    var el = $('<iframe></iframe>');
-    el.attr('src', url);
-    el.attr('width', '100%');
-    el.attr('height', '100%');
-    dp.$dialog.append(el).dialog('open');;
   };
 
   // Public: Kickstarts the plugin.
@@ -254,8 +200,8 @@
     };
   };
 
-  // Export the CKANEXT object onto the window.
-  $.extend(true, window, {CKANEXT: {}});
-  CKANEXT.DATAPREVIEW = dp;
+  // Export the DATAEXPLORER object onto the window.
+  $.extend(true, window, {DATAEXPLORER: {}});
+  DATAEXPLORER.TABLEVIEW = dp;
 
 })(jQuery);
