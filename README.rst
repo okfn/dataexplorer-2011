@@ -1,3 +1,9 @@
+**DEPRECATION NOTICE:** Data Explorer has been merged into (and replaced by) `Recline`_ - please see that repo for more details.
+
+.. _Recline: http://github.com/okfn/recline
+
+----
+
 DataExplorer_ is a pure javascript opensource client-side web application for
 viewing and visualizing data.
 
